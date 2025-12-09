@@ -1,13 +1,9 @@
 # Node
-node_modules/
-
-# Prisma
-/generated/prisma
+node_modules
 
 # Keep environment variables out of version control
 .env
 .env.local
-.env.*.local
 
 # Logs
 logs/
@@ -17,11 +13,12 @@ yarn-debug.log*
 yarn-error.log*
 
 # Editors
-.vscode/*
-!.vscode/extensions.json
 .idea
 .DS_Store
 
 # Build / Output
 dist/
 build/
+
+# Prisma
+/generated/prisma
