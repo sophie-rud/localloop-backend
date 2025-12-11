@@ -12,3 +12,113 @@ generator client {
 datasource db {
   provider = "postgresql"
 }
+
+model User {
+  id                Int             @id @default(autoincrement())
+  email             String          @unique
+  username          String          @unique
+  password          String
+  avatar            String?
+  isActive          Boolean         @default(true)
+  createdAt         DateTime        @default(now())
+  updatedAt         DateTime        @updatedAt
+  roleId            Int
+  role              Role            @relation(fields: [roleId], references: [id])
+  createdTracks     Track[]         @relation("CreatedTracks")
+  favoriteTracks    FavoriteTracks[]
+  createdPlaces     Place[]         @relation("CreatedPlaces")
+}
+
+model Role {
+  id       Int      @id @default(autoincrement())
+  name     String
+  users    User[]
+}
+
+model Track {
+  id            Int             @id @default(autoincrement())
+  title         String
+  photo         String?
+  duration      Int
+  distance      Decimal
+  difficulty    Difficulty
+  presentation  String          @db.Text
+  isPublished   Boolean         @default(false)
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+  userId        Int?
+  user          User?           @relation("CreatedTracks", fields: [userId], references: [id], onDelete: SetNull)
+  themeId       Int
+  theme         Theme           @relation(fields: [themeId], references: [id])
+  steps         Step[]          @relation("TrackSteps")
+  favoriteBy    FavoriteTracks[]
+
+  @@index([userId])
+}
+
+enum Difficulty {
+  FACILE
+  MOYEN
+  DIFFICILE
+  SPORTIF
+}
+
+model Step {
+  id            Int         @id @default(autoincrement())
+  name          String
+  photo         String?
+  advice        String?     @db.Text
+  anecdote      String?     @db.Text
+  stepOrder     Int
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+  trackId       Int
+  track         Track       @relation("TrackSteps", fields: [trackId], references: [id], onDelete: Cascade)
+  placeId       Int
+  place         Place       @relation(fields: [placeId], references: [id])
+
+  @@unique([trackId, stepOrder])
+  @@index([trackId])
+}
+
+model Place {
+  id            Int             @id @default(autoincrement())
+  name          String
+  photo         String?
+  city          String?
+  description   String?         @db.Text
+  latitude      Decimal         @db.Decimal(9, 6)
+  longitude     Decimal         @db.Decimal(9, 6)
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+  departmentId  Int
+  department    Department      @relation(fields: [departmentId], references: [id])
+  userId        Int?
+  user          User?           @relation("CreatedPlaces", fields: [userId], references: [id])
+  steps         Step[]
+}
+
+model FavoriteTracks {
+  userId      Int
+  user        User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  trackId     Int
+  track       Track       @relation(fields: [trackId], references: [id], onDelete: Cascade)
+  createdAt   DateTime    @default(now())
+
+  @@id([userId, trackId])
+  @@index([userId])
+}
+
+model Theme {
+  id       Int          @id @default(autoincrement())
+  name     String
+  icon     String
+  tracks   Track[]
+}
+
+model Department {
+  id        Int         @id @default(autoincrement())
+  name      String
+  code      String      @db.Char(2)
+  places    Place[]
+}
