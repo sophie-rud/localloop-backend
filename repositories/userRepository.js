@@ -1,0 +1,42 @@
+import prisma from '../config/prisma.js';
+
+async function findAll() {
+    const users = await prisma.user.findMany();
+    return users;
+}
+
+async function findById(id) {
+    const user = await prisma.user.findUnique({
+        where: { id: parseInt(id) }
+    });
+
+    return user;
+}
+
+async function createUser(data) {
+    const newUser = await prisma.user.create({ data });
+    return newUser;
+}
+
+async function updateUser(id, data) {
+    const updatedUser = await prisma.user.update({
+        where: { id: parseInt(id) },
+        data
+    });
+
+    return updatedUser;
+}
+
+async function deleteUser(id) {
+    await prisma.user.delete({
+        where: { id: parseInt(id) }
+    });
+}
+
+export default {
+    findAll,
+    findById,
+    createUser,
+    updateUser,
+    deleteUser,
+};
