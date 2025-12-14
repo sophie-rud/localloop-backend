@@ -1,0 +1,92 @@
+import stepRepository from '../repositories/stepRepository.js';
+import trackRepository from '../repositories/trackRepository.js';
+
+async function getAllStepsByTrack(trackId) {
+    const track = await trackRepository.findById(trackId);
+
+    if (!track) {
+        throw new Error("Parcours non trouvé");
+    }
+
+    return await stepRepository.findAllByTrackId(trackId);
+}
+
+async function getStepById(id) {
+    return await stepRepository.findById(id);
+}
+
+async function getStepByIdAndTrack(stepId, trackId) {
+    const step = await stepRepository.findByIdAndTrack(stepId, trackId);
+
+    if (!step) {
+        throw new Error("Étape non trouvée pour ce parcours");
+    }
+
+    return step;
+}
+
+async function createStep(trackId, step) {
+    const { name, placeId, stepOrder } = step;
+    const track = await trackRepository.findById(trackId);
+
+    if (!track) {
+        throw new Error("Parcours non trouvé");
+    }
+    if(!name) {
+        throw new Error("Vous avez oublié le nom de l'étape !");
+    }
+    if(!placeId) {
+        throw new Error("Définir un lieu pour l'étape.");
+    }
+    if (stepOrder !== undefined) {
+        if (!Number.isInteger(stepOrder) || stepOrder < 1) {
+            throw new Error("Numéro d'étape invalide");
+        }
+    }
+
+    return await stepRepository.createStep({
+        ...step,
+        trackId: parseInt(trackId),
+    });
+}
+
+async function editStep(stepId, trackId, data) {
+    const { name, placeId, stepOrder } = data;
+    const step = await stepRepository.findByIdAndTrack(stepId, trackId);
+
+    if (!step) {
+        throw new Error("Étape non trouvée pour ce parcours");
+    }
+    if(!name) {
+        throw new Error("Vous avez oublié le nom de l'étape !");
+    }
+    if(!placeId) {
+        throw new Error("Définir un lieu pour l'étape.");
+    }
+    if (stepOrder !== undefined) {
+        if (!Number.isInteger(stepOrder) || stepOrder < 1) {
+            throw new Error("Numéro d'étape invalide");
+        }
+    }
+
+    return await stepRepository.updateStep(stepId, trackId, data);
+}
+
+async function removeStep(stepId, trackId) {
+    const step = await stepRepository.findByIdAndTrack(stepId, trackId);
+
+    if (!step) {
+        throw new Error("Étape non trouvée pour ce parcours");
+    }
+
+    return await stepRepository.deleteStep(stepId, trackId);
+}
+
+export default {
+    getAllStepsByTrack,
+    getStepById,
+    getStepByIdAndTrack,
+    createStep,
+    editStep,
+    removeStep,
+}
