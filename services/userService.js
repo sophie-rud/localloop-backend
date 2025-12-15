@@ -8,6 +8,10 @@ async function getUserById(id) {
     return await userRepository.findById(id);
 }
 
+async function getUserByEmail(email) {
+    return await userRepository.findByEmail(email);
+}
+
 async function createUser(user) {
     const { email, username, password } = user;
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -25,7 +29,12 @@ async function createUser(user) {
         throw new Error("Le mot de passe est obligatoire");
     }
 
-    return await userRepository.createUser(user);
+    return await userRepository.createUser({
+        email,
+        username,
+        password,
+        roleId: 1
+    });
 }
 
 async function editUser(id, data) {
@@ -55,6 +64,7 @@ async function removeUser(id) {
 export default {
     getAllUsers,
     getUserById,
+    getUserByEmail,
     createUser,
     editUser,
     removeUser,

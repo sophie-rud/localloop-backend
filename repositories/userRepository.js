@@ -13,6 +13,14 @@ async function findById(id) {
     return user;
 }
 
+async function findByEmail(email) {
+    const user = await prisma.user.findUnique({
+        where: { email: email }
+    });
+
+    return user;
+}
+
 async function createUser(data) {
     const newUser = await prisma.user.create({ data });
     return newUser;
@@ -33,10 +41,21 @@ async function deleteUser(id) {
     });
 }
 
+async function saveRefreshToken(refreshToken, { userId, email }) {
+    if (!userId && !email) throw new Error("userId ou email requis");
+
+    await prisma.user.update({
+         where: userId ? { id: parseInt(userId) } : { email },
+         data: { refreshToken },
+    })
+}
+
 export default {
     findAll,
     findById,
+    findByEmail,
     createUser,
     updateUser,
     deleteUser,
+    saveRefreshToken,
 };
