@@ -9,6 +9,7 @@ import stepRoutes from './routes/stepRoutes.js';
 import placeRoutes from './routes/placeRoutes.js';
 import userRoutes from './routes/userRoutes.js';
 import authRoutes from './routes/authRoutes.js';
+import themeRoutes from './routes/themeRoutes.js';
 import stepController from "./controllers/stepController.js";
 
 app.use(express.json());
@@ -24,6 +25,7 @@ app.get('/steps', stepController.getAllSteps);
 app.use('/places', placeRoutes);
 app.use('/users', userRoutes);
 app.use('/', authRoutes);
+app.use('/themes', themeRoutes);
 
 const PORT = 3000;
 app.listen(PORT, () => {
