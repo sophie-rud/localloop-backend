@@ -10,7 +10,6 @@ import placeRoutes from './routes/placeRoutes.js';
 import userRoutes from './routes/userRoutes.js';
 import authRoutes from './routes/authRoutes.js';
 import stepController from "./controllers/stepController.js";
-import router from "./routes/stepRoutes.js";
 
 app.use(express.json());
 app.use(cookieParser());
