@@ -1,15 +1,19 @@
 import jwt from 'jsonwebtoken';
 import userService from '../services/userService.js';
 
-const refresh = async (req, res, next) => {
+const refreshTokenMiddleware = async (req, res, next) => {
     try {
         const token = req.cookies.refreshToken;
-        if (!token) throw "Token manquant";
+        if (!token) {
+            throw Error("Token manquant");
+        }
 
         const decodedToken = jwt.verify(token, "refreshSecret");
         const user = await userService.getUserByEmail(decodedToken.sub);
 
-        if (token !== user.refreshToken) throw "Token invalide";
+        if (token !== user.refreshToken) {
+            throw Error("Token invalide");
+        }
 
         req.refreshPayload = { email: decodedToken.sub, userId: decodedToken.userId };
         next();
@@ -18,4 +22,4 @@ const refresh = async (req, res, next) => {
     }
 };
 
-export default refresh;
+export default refreshTokenMiddleware;

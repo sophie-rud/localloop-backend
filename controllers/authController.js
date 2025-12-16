@@ -46,7 +46,7 @@ const getRefreshToken = async (req, res) => {
             })
             .status(200).json({ accessToken });
     } catch (error) {
-        res.status(401).json({ message: "Impossible de renouveler le token", error });
+        res.status(401).json({ error: error.message || "Impossible de renouveler le token" });
     }
 };
 

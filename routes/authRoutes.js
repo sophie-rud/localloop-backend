@@ -2,12 +2,12 @@ import express from 'express';
 const router = express.Router();
 import authController from '../controllers/authController.js';
 import auth from "../middlewares/auth.js";
-import refresh from "../middlewares/refresh.js";
+import refreshTokenMiddleware from "../middlewares/refresh-token-middleware.js";
 
 router.post('/signup', authController.signUp);
 router.post('/login', authController.signIn);
-router.post("/logout", refresh, authController.logout);
+router.post("/logout", refreshTokenMiddleware, authController.logout);
 router.get('/profile', auth, authController.getProfile);
-router.post('/refresh', refresh, authController.getRefreshToken);
+router.post('/refresh', refreshTokenMiddleware, authController.getRefreshToken);
 
 export default router;
