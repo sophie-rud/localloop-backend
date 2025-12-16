@@ -1,4 +1,14 @@
 import stepService from '../services/stepService.js';
+import trackService from "../services/trackService.js";
+
+async function getAllSteps(req, res) {
+    try {
+        const steps = await stepService.getAllSteps();
+        res.json(steps);
+    } catch (error) {
+        res.status(400).json({ error: error.message });
+    }
+}
 
 async function getAllStepsByTrack(req, res) {
     const trackId = parseInt(req.params.trackId);
@@ -67,6 +77,7 @@ async function removeStep(req, res) {
 }
 
 export default {
+    getAllSteps,
     getAllStepsByTrack,
     getStepById,
     getStepByIdAndTrack,

@@ -1,5 +1,10 @@
 import prisma from '../config/prisma.js';
 
+async function findAll() {
+    const steps = await prisma.step.findMany();
+    return steps;
+}
+
 async function findAllByTrackId(trackId) {
     const steps = await prisma.step.findMany({
         where: { trackId: parseInt(trackId) },
@@ -55,6 +60,7 @@ async function deleteStep(stepId, trackId) {
 }
 
 export default {
+    findAll,
     findAllByTrackId,
     findById,
     findByIdAndTrack,

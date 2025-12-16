@@ -9,6 +9,8 @@ import stepRoutes from './routes/stepRoutes.js';
 import placeRoutes from './routes/placeRoutes.js';
 import userRoutes from './routes/userRoutes.js';
 import authRoutes from './routes/authRoutes.js';
+import stepController from "./controllers/stepController.js";
+import router from "./routes/stepRoutes.js";
 
 app.use(express.json());
 app.use(cookieParser());
@@ -19,6 +21,7 @@ app.use(cors({
 
 app.use('/tracks', trackRoutes);
 app.use('/tracks/:trackId/steps', stepRoutes);
+app.get('/steps', stepController.getAllSteps);
 app.use('/places', placeRoutes);
 app.use('/users', userRoutes);
 app.use('/', authRoutes);

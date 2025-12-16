@@ -1,6 +1,10 @@
 import stepRepository from '../repositories/stepRepository.js';
 import trackRepository from '../repositories/trackRepository.js';
 
+async function getAllSteps() {
+    return await stepRepository.findAll();
+}
+
 async function getAllStepsByTrack(trackId) {
     const track = await trackRepository.findById(trackId);
 
@@ -83,6 +87,7 @@ async function removeStep(stepId, trackId) {
 }
 
 export default {
+    getAllSteps,
     getAllStepsByTrack,
     getStepById,
     getStepByIdAndTrack,
