@@ -43,11 +43,11 @@ async function getStepByIdAndTrack(req, res) {
 }
 
 async function createStep(req, res) {
-    const trackId = parseInt(req.params.trackId);
+    const { trackId } = req.params;
 
     try {
-        const newStep = await stepService.createStep(trackId, req.body);
-        res.status(201).json({ newStep,  message: "Etape créée avec succès" });
+        const newStep = await stepService.createStep(parseInt(trackId), req.body);
+        res.status(201).json(newStep);
     } catch (error) {
         res.status(400).json({ error: error.message });
     }

@@ -23,7 +23,7 @@ async function getTrackById(req, res) {
 async function createTrack(req, res) {
     try {
         const newTrack = await trackService.createTrack(req.body);
-        res.status(201).json({ newTrack,  message: "Parcours créé avec succès" });
+        res.status(201).json(newTrack);
     } catch (error) {
         res.status(400).json({ error: error.message });
     }
