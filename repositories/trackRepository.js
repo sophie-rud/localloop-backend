@@ -1,13 +1,39 @@
 import prisma from '../config/prisma.js';
 
 async function findAll() {
-    const tracks = await prisma.track.findMany();
+    const tracks = await prisma.track.findMany({
+        include: {
+            steps: {
+                include: {
+                    place: {
+                        include: {
+                            department: true
+                        }
+                    }
+                }
+            },
+            theme: true
+        },
+    });
     return tracks;
 }
 
 async function findById(id) {
     const track = await prisma.track.findUnique({
-        where: { id: parseInt(id) }
+        where: { id: parseInt(id) },
+        include: {
+            steps: {
+                orderBy: { stepOrder: 'asc' },
+                include: {
+                    place: {
+                        include: {
+                            department: true,
+                        },
+                    }
+                },
+            },
+            theme: true
+        },
     });
 
     return track;
