@@ -6,32 +6,32 @@ async function signIn(email, password) {
     const user = await userRepository.findByEmail(email);
 
     if (!user) {
-        throw { message: "Utilisateur non trouvé" };
+        throw new Error ("Utilisateur non trouvé");
     }
 
     const isVerify = await bcrypt.compare(password, user.password);
 
     if (!isVerify) {
-        throw { message: "Non autorisé" };
+        throw new Error ("Non autorisé");
     }
 
     const accessToken = jwt.sign(
         { sub: email, userId: user.id },
-        "secret",
-        { expiresIn: "15min" }
+        "process.env.JWT_ACCESS_SECRET",
+        { expiresIn: "10m" }
     );
     const refreshToken = jwt.sign(
         { sub: email, userId: user.id },
-        "refreshSecret",
+        "process.env.JWT_REFRESH_SECRET",
         { expiresIn: "7d" }
     );
 
     await userRepository.saveRefreshToken(refreshToken, { email });
 
-    return { accessToken, refreshToken };
+    return { accessToken, refreshToken, user };
 }
 
-async function refresh(userId) {
+async function refresh(userId, email) {
     const user = await userRepository.findById(userId);
 
     if (!user || !user.refreshToken) {
@@ -39,13 +39,13 @@ async function refresh(userId) {
     }
 
     const accessToken = jwt.sign(
-        { sub: user.email, userId: user.id },
-        "secret",
-        { expiresIn: "15min" }
+        { sub: email, userId: userId },
+        "process.env.JWT_ACCESS_SECRET",
+        { expiresIn: "10m" }
     );
     const refreshToken = jwt.sign(
-        { sub: user.email, userId: user.id },
-        "refreshSecret",
+        { sub: email, userId: userId },
+        "process.env.JWT_REFRESH_SECRET",
         { expiresIn: "7d" }
     );
 

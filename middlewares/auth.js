@@ -1,15 +1,19 @@
 import jwt from "jsonwebtoken";
 
-// récupération du JWT depuis les en-têtes
+// JWT retrieval
 const auth = (req, res, next) => {
     try {
-        const token = req.headers.authorization.split(" ")[1];
-        const decodedToken = jwt.verify(token, 'secret');
+        const token = req.cookies.jwt;
+        if (!token) {
+            throw new Error("Non autorisé");
+        }
+
+        const decodedToken = jwt.verify(token, "process.env.JWT_ACCESS_SECRET");
 
         req.auth = { email: decodedToken.sub, userId: decodedToken.userId };
         next();
     } catch (error) {
-        res.status(401).json({error});
+        res.status(401).json({ message: "Authentification échouée" , error });
     }
 }
 

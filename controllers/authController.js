@@ -13,20 +13,36 @@ async function signUp (req, res) {
     }
 }
 
-//signIn avec vérification sur l'en-tête
+//signIn with generation and sending of the JWT in a cookie
 async function signIn(req, res) {
     try {
         const { email, password } = req.body;
-        const { accessToken, refreshToken } = await authService.signIn(email, password);
+        const { accessToken, refreshToken, user } = await authService.signIn(email, password);
 
         res
+            .cookie("accessToken", accessToken, {
+                httpOnly: true,
+                secure: process.env.NODE_ENV === "production", // = true in production
+                sameSite: "Strict",
+                maxAge: 10 * 60 * 1000 // 10 minutes
+            })
             .cookie("refreshToken", refreshToken, {
                 httpOnly: true,
-                secure: true,
+                secure: process.env.NODE_ENV === "production",
                 sameSite: "Strict",
-                maxAge: 7 * 24 * 60 * 60 * 1000
+                maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
             })
-            .status(200).json({ accessToken });
+            .status(200).json({   user: {
+                id: user.id,
+                email: user.email,
+                username: user.username,
+                avatar: user.avatar,
+                isActive: user.isActive,
+                roleId: user.roleId,
+                FavoriteTracks: user.FavoriteTracks,
+                CreatedTracks: user.CreatedTracks,
+                CreatedPlaces: user.CreatedPlaces,
+            } });
     } catch (error) {
         res.status(401).json({ message: error.message || "Authentification échouée" });
     }
@@ -34,30 +50,45 @@ async function signIn(req, res) {
 
 const getRefreshToken = async (req, res) => {
     try {
-        const { userId } = req.refreshPayload;
-        const { accessToken, refreshToken } = await authService.refresh(userId);
+        const { userId, email } = req.refreshPayload;
+        const { accessToken, refreshToken } = await authService.refresh(userId, email);
 
         res
+            .cookie("accessToken", accessToken, {
+                httpOnly: true,
+                secure: process.env.NODE_ENV === "production", // = true in production
+                sameSite: "Strict",
+                maxAge: 10 * 60 * 1000 // 10 minutes
+            })
             .cookie("refreshToken", refreshToken, {
                 httpOnly: true,
-                secure: true,
+                secure: process.env.NODE_ENV === "production",
                 sameSite: "Strict",
-                maxAge: 7 * 24 * 60 * 60 * 1000
+                maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
             })
-            .status(200).json({ accessToken });
+            .status(200).json({ message: "Token rafraîchi avec succès" });
     } catch (error) {
         res.status(401).json({ error: error.message || "Impossible de renouveler le token" });
     }
 };
 
 async function getProfile(req, res) {
-    const email = req.auth.email;
-
     try {
+        const email = req.auth.email;
+
+        if (!email) {
+            return res.status(401).json({ error: "Utilisateur non authentifié" });
+        }
+
         const user = await userService.getUserByEmail(email);
+
+        if (!user) {
+            return res.status(404).json({ error: "Utilisateur introuvable" });
+        }
+
         res.status(200).json(user)
     } catch (error) {
-        res.status(401).json({ error: error.message });
+        res.status(500).json({ error: error.message });
     }
 }
 
@@ -68,15 +99,16 @@ async function logout(req, res) {
         await authService.logout(userId);
 
         res
-            .cookie("refreshToken", {
+            .cookie("refreshToken", "", {
                 httpOnly: true,
-                secure: true,
+                secure: process.env.NODE_ENV === "production", // = true in production
                 sameSite: "Strict",
+                maxAge: 0,
             })
             .status(200)
             .json({ message: "Déconnexion réussie" });
     } catch (error) {
-        res.status(401).json({ message: error.message || "Authentification échouée" });
+        res.status(500).json({ message: error.message || "Erreur lors de la déconnexion" });
     }
 }
 
