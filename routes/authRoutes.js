@@ -6,8 +6,8 @@ import refreshTokenMiddleware from "../middlewares/refresh-token-middleware.js";
 
 router.post('/signup', authController.signUp);
 router.post('/login', authController.signIn);
-router.post("/logout", refreshTokenMiddleware, authController.logout);
-router.get('/profile', auth, authController.getProfile);
+router.post('/logout', refreshTokenMiddleware, authController.logout);
+router.get('/me', auth, authController.getProfile);
 router.post('/refresh', refreshTokenMiddleware, authController.getRefreshToken);
 
 export default router;
