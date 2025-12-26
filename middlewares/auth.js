@@ -3,7 +3,7 @@ import jwt from "jsonwebtoken";
 // JWT retrieval
 const auth = (req, res, next) => {
     try {
-        const token = req.cookies.jwt;
+        const token = req.cookies.accessToken;
         if (!token) {
             throw new Error("Non autorisé");
         }
