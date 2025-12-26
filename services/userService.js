@@ -12,6 +12,10 @@ async function getUserByEmail(email) {
     return await userRepository.findByEmail(email);
 }
 
+async function getUserProfile(email) {
+    return userRepository.findByEmail(email, {includeTracks: true});
+}
+
 async function createUser(user) {
     const { email, username, password } = user;
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -65,6 +69,7 @@ export default {
     getAllUsers,
     getUserById,
     getUserByEmail,
+    getUserProfile,
     createUser,
     editUser,
     removeUser,

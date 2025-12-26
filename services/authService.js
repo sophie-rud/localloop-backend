@@ -3,7 +3,7 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
 async function signIn(email, password) {
-    const user = await userRepository.findByEmail(email);
+    const user = await userRepository.findByEmail(email, {includeTracks: true});
 
     if (!user) {
         throw new Error ("Utilisateur non trouvé");

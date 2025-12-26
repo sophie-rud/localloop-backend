@@ -32,17 +32,18 @@ async function signIn(req, res) {
                 sameSite: "Strict",
                 maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
             })
-            .status(200).json({   user: {
-                id: user.id,
-                email: user.email,
-                username: user.username,
-                avatar: user.avatar,
-                isActive: user.isActive,
-                roleId: user.roleId,
-                FavoriteTracks: user.FavoriteTracks,
-                CreatedTracks: user.CreatedTracks,
-                CreatedPlaces: user.CreatedPlaces,
-            } });
+            .status(200).json({
+                user: {
+                    id: user.id,
+                    email: user.email,
+                    username: user.username,
+                    avatar: user.avatar,
+                    isActive: user.isActive,
+                    roleId: user.roleId,
+                    favoriteTracks: user.favoriteTracks,
+                    createdTracks: user.createdTracks,
+                }
+            });
     } catch (error) {
         res.status(401).json({ message: error.message || "Authentification échouée" });
     }
@@ -80,13 +81,24 @@ async function getProfile(req, res) {
             return res.status(401).json({ error: "Utilisateur non authentifié" });
         }
 
-        const user = await userService.getUserByEmail(email);
+        const user = await userService.getUserProfile(email);
 
         if (!user) {
             return res.status(404).json({ error: "Utilisateur introuvable" });
         }
 
-        res.status(200).json(user)
+        res.status(200).json({
+            user: {
+                id: user.id,
+                email: user.email,
+                username: user.username,
+                avatar: user.avatar,
+                isActive: user.isActive,
+                roleId: user.roleId,
+                favoriteTracks: user.favoriteTracks,
+                createdTracks: user.createdTracks,
+            }
+        })
     } catch (error) {
         res.status(500).json({ error: error.message });
     }

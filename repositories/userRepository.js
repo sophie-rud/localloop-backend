@@ -13,9 +13,29 @@ async function findById(id) {
     return user;
 }
 
-async function findByEmail(email) {
+async function findByEmail(email, options = {}) {
+    const { includeTracks = false } = options;
+
     const user = await prisma.user.findUnique({
-        where: { email: email }
+        where: { email: email },
+        include: {
+            ...(includeTracks && {
+                createdTracks: {
+                    include: {
+                        steps: {
+                            include: {
+                                place: {
+                                    include: {
+                                        department: true,
+                                    },
+                                }
+                            },
+                        },
+                        theme: true
+                    },
+                },
+            }),
+        }
     });
 
     return user;
