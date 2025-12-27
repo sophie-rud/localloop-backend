@@ -40,7 +40,6 @@ async function signIn(req, res) {
                     avatar: user.avatar,
                     isActive: user.isActive,
                     roleId: user.roleId,
-                    favoriteTracks: user.favoriteTracks,
                     createdTracks: user.createdTracks,
                 }
             });
@@ -73,37 +72,6 @@ const getRefreshToken = async (req, res) => {
     }
 };
 
-async function getProfile(req, res) {
-    try {
-        const email = req.auth.email;
-
-        if (!email) {
-            return res.status(401).json({ error: "Utilisateur non authentifié" });
-        }
-
-        const user = await userService.getUserProfile(email);
-
-        if (!user) {
-            return res.status(404).json({ error: "Utilisateur introuvable" });
-        }
-
-        res.status(200).json({
-            user: {
-                id: user.id,
-                email: user.email,
-                username: user.username,
-                avatar: user.avatar,
-                isActive: user.isActive,
-                roleId: user.roleId,
-                favoriteTracks: user.favoriteTracks,
-                createdTracks: user.createdTracks,
-            }
-        })
-    } catch (error) {
-        res.status(500).json({ error: error.message });
-    }
-}
-
 async function logout(req, res) {
     try {
         const { userId } = req.refreshPayload;
@@ -128,6 +96,5 @@ export default {
     signUp,
     signIn,
     getRefreshToken,
-    getProfile,
     logout,
 }
