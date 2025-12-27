@@ -12,10 +12,6 @@ async function getUserByEmail(email) {
     return await userRepository.findByEmail(email);
 }
 
-async function getUserProfile(email) {
-    return userRepository.findByEmail(email, {includeTracks: true});
-}
-
 async function createUser(user) {
     const { email, username, password } = user;
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -65,12 +61,39 @@ async function removeUser(id) {
     return await userRepository.deleteUser(id);
 }
 
+async function getUserProfile(email) {
+    return userRepository.findByEmail(email, {includeTracks: true});
+}
+
+async function editProfile(id, data) {
+    const { email, username, avatar } = data;
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    if(!email) {
+        throw new Error("L'email est obligatoire");
+    }
+    if (!emailRegex.test(email)) {
+        throw new Error("Email invalide");
+    }
+    if(!username) {
+        throw new Error("Le nom d'utilisateur est obligatoire");
+    }
+
+    return await userRepository.updateUser(id, data);
+}
+
+async function removeProfile(id) {
+    return await userRepository.deleteUser(id);
+}
+
 export default {
     getAllUsers,
     getUserById,
     getUserByEmail,
-    getUserProfile,
     createUser,
     editUser,
     removeUser,
+    getUserProfile,
+    editProfile,
+    removeProfile,
 }

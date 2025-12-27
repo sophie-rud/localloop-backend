@@ -24,7 +24,7 @@ app.use('/tracks', trackRoutes);
 app.use('/tracks/:trackId/steps', stepRoutes);
 app.get('/steps', stepController.getAllSteps);
 app.use('/places', placeRoutes);
-app.use('/users', userRoutes);
+app.use('/', userRoutes);
 app.use('/', authRoutes);
 app.use('/themes', themeRoutes);
 app.use('/departments', departmentRoutes);
