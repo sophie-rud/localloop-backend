@@ -22,3 +22,7 @@ build/
 
 # Prisma
 /generated/prisma
+
+# Uploads
+uploads/
+!uploads/.gitkeep
