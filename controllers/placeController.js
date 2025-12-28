@@ -22,7 +22,13 @@ async function getPlaceById(req, res) {
 
 async function createPlace(req, res) {
     try {
-        const newPlace = await placeService.createPlace(req.body);
+        const placeData = req.body;
+
+        if (req.file) {
+            placeData.photo = `/uploads/${req.file.filename}`;
+        }
+
+        const newPlace = await placeService.createPlace(placeData);
         res.status(201).json({ newPlace,  message: "Lieu créé avec succès" });
     } catch (error) {
         res.status(400).json({ error: error.message });
@@ -30,10 +36,15 @@ async function createPlace(req, res) {
 }
 
 async function editPlace(req, res) {
-    const id = parseInt(req.params.id);
-
     try {
-        const updatedPlace = await placeService.editPlace(id, req.body);
+        const id = parseInt(req.params.id);
+        const updatedData = req.body;
+
+        if (req.file) {
+            updatedData.photo = `/uploads/${req.file.filename}`;
+        }
+
+        const updatedPlace = await placeService.editPlace(id, updatedData);
         res.status(201).json({ updatedPlace, message: "Lieu modifié avec succès" });
     } catch (error) {
         res.status(400).json({ error: error.message });

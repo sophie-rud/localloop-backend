@@ -12,6 +12,14 @@ import authRoutes from './routes/authRoutes.js';
 import themeRoutes from './routes/themeRoutes.js';
 import departmentRoutes from './routes/departmentRoutes.js';
 import stepController from "./controllers/stepController.js";
+import path from "path";
+import fs from 'fs';
+
+// Create uploads if it doesn't exist
+const uploadsDir = path.join(process.cwd(), 'uploads');
+if (!fs.existsSync(uploadsDir)) {
+    fs.mkdirSync(uploadsDir, { recursive: true });
+}
 
 app.use(express.json());
 app.use(cookieParser());
@@ -28,6 +36,13 @@ app.use('/', userRoutes);
 app.use('/', authRoutes);
 app.use('/themes', themeRoutes);
 app.use('/departments', departmentRoutes);
+
+// Configure uploaded static files (avatars, photos)
+app.use('/uploads', express.static(path.join(process.cwd(), 'uploads'), {
+    setHeaders: (res, filePath) => {
+        res.set("Cache-Control", "public, max-age=31536000");
+    }
+}));
 
 const PORT = 3000;
 app.listen(PORT, () => {

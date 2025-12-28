@@ -86,6 +86,10 @@ async function editProfile(req, res) {
         const userId = req.auth.userId;
         const updatedData = req.body;
 
+        if (req.file) {
+            updatedData.avatar = `/uploads/${req.file.filename}`;
+        }
+
         const updatedUser = await userService.editProfile(userId, updatedData);
 
         res.status(200).json(updatedUser);

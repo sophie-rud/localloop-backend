@@ -43,10 +43,15 @@ async function getStepByIdAndTrack(req, res) {
 }
 
 async function createStep(req, res) {
-    const { trackId } = req.params;
-
     try {
-        const newStep = await stepService.createStep(parseInt(trackId), req.body);
+        const { trackId } = req.params;
+        const stepData = req.body;
+
+        if (req.file) {
+            stepData.photo = `/uploads/${req.file.filename}`;
+        }
+
+        const newStep = await stepService.createStep(parseInt(trackId), stepData);
         res.status(201).json(newStep);
     } catch (error) {
         res.status(400).json({ error: error.message });
@@ -54,10 +59,15 @@ async function createStep(req, res) {
 }
 
 async function editStep(req, res) {
-    const { trackId, id: stepId } = req.params;
-
     try {
-        const updatedStep = await stepService.editStep(stepId, trackId, req.body);
+        const { trackId, stepId } = req.params;
+        const updatedData = req.body;
+
+        if (req.file) {
+            updatedData.photo = `/uploads/${req.file.filename}`;
+        }
+
+        const updatedStep = await stepService.editStep(stepId, trackId, updatedData);
         res.status(201).json({ updatedStep, message: "Etape modifiée avec succès" });
     } catch (error) {
         res.status(400).json({ error: error.message });

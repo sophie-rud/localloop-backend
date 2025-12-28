@@ -22,7 +22,13 @@ async function getTrackById(req, res) {
 
 async function createTrack(req, res) {
     try {
-        const newTrack = await trackService.createTrack(req.body);
+        const trackData = req.body;
+
+        if (req.file) {
+            trackData.photo = `/uploads/${req.file.filename}`;
+        }
+
+        const newTrack = await trackService.createTrack(trackData);
         res.status(201).json(newTrack);
     } catch (error) {
         res.status(400).json({ error: error.message });
@@ -30,10 +36,15 @@ async function createTrack(req, res) {
 }
 
 async function editTrack(req, res) {
-    const id = parseInt(req.params.id);
-
     try {
-        const updatedTrack = await trackService.editTrack(id, req.body);
+        const id = parseInt(req.params.id);
+        const updatedData = req.body;
+
+        if (req.file) {
+            updatedData.photo = `/uploads/${req.file.filename}`;
+        }
+
+        const updatedTrack = await trackService.editTrack(id, updatedData);
         res.status(201).json({ updatedTrack, message: "Parcours modifié avec succès" });
     } catch (error) {
         res.status(400).json({ error: error.message });
