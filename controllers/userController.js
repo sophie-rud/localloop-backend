@@ -84,7 +84,12 @@ async function getProfile(req, res) {
 async function editProfile(req, res) {
     try {
         const userId = req.auth.userId;
-        const updatedData = req.body;
+        const { username, email } = req.body;
+
+        const updatedData = {
+            username,
+            email,
+        };
 
         if (req.file) {
             updatedData.avatar = `/uploads/${req.file.filename}`;
@@ -94,7 +99,8 @@ async function editProfile(req, res) {
 
         res.status(200).json(updatedUser);
     } catch (error) {
-        res.status(500).json({ error: error.message });
+        console.error("Erreur lors de la modification du profil :", error);
+        res.status(400).json({ error: error.message });
     }
 }
 
