@@ -60,8 +60,24 @@ async function createStep(req, res) {
 
 async function editStep(req, res) {
     try {
-        const { trackId, stepId } = req.params;
-        const updatedData = req.body;
+        const trackId = parseInt(req.params.trackId);
+        const stepId = parseInt(req.params.id);
+
+        const {
+            placeId,
+            name,
+            stepOrder,
+            anecdote,
+            advice,
+        } = req.body;
+
+        const updatedData = {
+            placeId: parseInt(placeId),
+            name,
+            stepOrder: parseInt(stepOrder),
+            anecdote,
+            advice,
+        };
 
         if (req.file) {
             updatedData.photo = `/uploads/${req.file.filename}`;
@@ -70,6 +86,7 @@ async function editStep(req, res) {
         const updatedStep = await stepService.editStep(stepId, trackId, updatedData);
         res.status(201).json({ updatedStep, message: "Etape modifiée avec succès" });
     } catch (error) {
+        console.error("Erreur lors de la modification de l'étape :", error);
         res.status(400).json({ error: error.message });
     }
 }
