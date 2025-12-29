@@ -38,7 +38,26 @@ async function createTrack(req, res) {
 async function editTrack(req, res) {
     try {
         const id = parseInt(req.params.id);
-        const updatedData = req.body;
+
+        const {
+            title,
+            distance,
+            duration,
+            difficulty,
+            presentation,
+            isPublished,
+            themeId
+        } = req.body;
+
+        const updatedData = {
+            title,
+            distance: Number(distance),
+            duration: Number(duration),
+            difficulty,
+            presentation,
+            isPublished: isPublished === "true",
+            themeId: parseInt(themeId)
+        };
 
         if (req.file) {
             updatedData.photo = `/uploads/${req.file.filename}`;
@@ -47,6 +66,7 @@ async function editTrack(req, res) {
         const updatedTrack = await trackService.editTrack(id, updatedData);
         res.status(201).json({ updatedTrack, message: "Parcours modifié avec succès" });
     } catch (error) {
+        console.error("Erreur lors de la modification du parcours :", error);
         res.status(400).json({ error: error.message });
     }
 }
