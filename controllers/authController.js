@@ -6,7 +6,9 @@ async function signUp (req, res) {
     try {
         const { email, password, username } = req.body;
         const hash = await bcrypt.hash(password, 10);
-        const result = await userService.createUser({ email, password: hash, username });
+
+        const result = await userService.signupUser({ email, password: hash, username });
+
         res.status(201).json(result);
     } catch (error) {
         res.status(500).json({ message: error.message || "Erreur interne" });

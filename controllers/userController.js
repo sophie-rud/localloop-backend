@@ -20,21 +20,43 @@ async function getUserById(req, res) {
     }
 }
 
+// Build a clean user data object from the request
+function userDataBuilder(body) {
+    const {
+        username,
+        email,
+        roleId,
+        isActive
+    } = body;
+
+    return {
+        username,
+        email,
+        roleId: parseInt(roleId),
+        isActive: isActive === true,
+    };
+}
+
 async function createUser(req, res) {
     try {
-        const newUser = await userService.createUser(req.body);
-        res.status(201).json({ newUser,  message: "Utilisateur créé avec succès" });
+        const userData = userDataBuilder(req.body);
+
+        const newUser = await userService.createUserByAdmin(userData);
+
+        res.status(201).json(newUser);
     } catch (error) {
         res.status(400).json({ error: error.message });
     }
 }
 
 async function editUser(req, res) {
-    const id = parseInt(req.params.id);
-
     try {
-        const updatedUser = await userService.editUser(id, req.body);
-        res.status(201).json({ updatedUser, message: "Utilisateur modifié avec succès" });
+        const id = parseInt(req.params.id);
+        const userData = userDataBuilder(req.body);
+
+        const updatedUser = await userService.editUserByAdmin(id, userData);
+
+        res.status(201).json(updatedUser);
     } catch (error) {
         res.status(400).json({ error: error.message });
     }
