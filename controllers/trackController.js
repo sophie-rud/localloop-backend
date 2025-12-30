@@ -20,15 +20,41 @@ async function getTrackById(req, res) {
     }
 }
 
+// Build a clean track data object from the request
+function trackDataBuilder(body, file) {
+    const {
+        title,
+        distance,
+        duration,
+        difficulty,
+        presentation,
+        isPublished,
+        themeId
+    } = body;
+
+    const data = {
+        title,
+        distance: Number(distance),
+        duration: Number(duration),
+        difficulty,
+        presentation,
+        isPublished: isPublished === "true",
+        themeId: parseInt(themeId)
+    };
+
+    if (file) {
+        data.photo = `/uploads/${file.filename}`;
+    }
+
+    return data;
+}
+
 async function createTrack(req, res) {
     try {
-        const trackData = req.body;
-
-        if (req.file) {
-            trackData.photo = `/uploads/${req.file.filename}`;
-        }
+        const trackData = trackDataBuilder(req.body, req.file);
 
         const newTrack = await trackService.createTrack(trackData);
+
         res.status(201).json(newTrack);
     } catch (error) {
         res.status(400).json({ error: error.message });
@@ -38,32 +64,10 @@ async function createTrack(req, res) {
 async function editTrack(req, res) {
     try {
         const id = parseInt(req.params.id);
+        const updatedTrackData = trackDataBuilder(req.body, req.file);
 
-        const {
-            title,
-            distance,
-            duration,
-            difficulty,
-            presentation,
-            isPublished,
-            themeId
-        } = req.body;
+        const updatedTrack = await trackService.editTrack(id, updatedTrackData);
 
-        const updatedData = {
-            title,
-            distance: Number(distance),
-            duration: Number(duration),
-            difficulty,
-            presentation,
-            isPublished: isPublished === "true",
-            themeId: parseInt(themeId)
-        };
-
-        if (req.file) {
-            updatedData.photo = `/uploads/${req.file.filename}`;
-        }
-
-        const updatedTrack = await trackService.editTrack(id, updatedData);
         res.status(201).json({ updatedTrack, message: "Parcours modifié avec succès" });
     } catch (error) {
         console.error("Erreur lors de la modification du parcours :", error);

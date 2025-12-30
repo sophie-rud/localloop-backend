@@ -42,16 +42,38 @@ async function getStepByIdAndTrack(req, res) {
     }
 }
 
+// Build a clean step data object from the request
+function stepDataBuilder(body, file) {
+    const {
+        placeId,
+        name,
+        stepOrder,
+        anecdote,
+        advice,
+    } = body;
+
+    const data = {
+        placeId: parseInt(placeId),
+        name,
+        stepOrder: parseInt(stepOrder),
+        anecdote,
+        advice,
+    };
+
+    if (file) {
+        data.photo = `/uploads/${file.filename}`;
+    }
+
+    return data
+}
+
 async function createStep(req, res) {
     try {
         const { trackId } = req.params;
-        const stepData = req.body;
-
-        if (req.file) {
-            stepData.photo = `/uploads/${req.file.filename}`;
-        }
+        const stepData = stepDataBuilder(req.body, req.file);
 
         const newStep = await stepService.createStep(parseInt(trackId), stepData);
+
         res.status(201).json(newStep);
     } catch (error) {
         res.status(400).json({ error: error.message });
@@ -62,28 +84,10 @@ async function editStep(req, res) {
     try {
         const trackId = parseInt(req.params.trackId);
         const stepId = parseInt(req.params.id);
+        const updatedStepData = stepDataBuilder(req.body, req.file);
 
-        const {
-            placeId,
-            name,
-            stepOrder,
-            anecdote,
-            advice,
-        } = req.body;
+        const updatedStep = await stepService.editStep(stepId, trackId, updatedStepData);
 
-        const updatedData = {
-            placeId: parseInt(placeId),
-            name,
-            stepOrder: parseInt(stepOrder),
-            anecdote,
-            advice,
-        };
-
-        if (req.file) {
-            updatedData.photo = `/uploads/${req.file.filename}`;
-        }
-
-        const updatedStep = await stepService.editStep(stepId, trackId, updatedData);
         res.status(201).json({ updatedStep, message: "Etape modifiée avec succès" });
     } catch (error) {
         console.error("Erreur lors de la modification de l'étape :", error);

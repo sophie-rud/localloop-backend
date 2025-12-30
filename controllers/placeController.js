@@ -20,15 +20,39 @@ async function getPlaceById(req, res) {
     }
 }
 
+// Build a clean place data object from the request
+function placeDataBuilder(body, file) {
+    const {
+        name,
+        city,
+        description,
+        departmentId,
+        latitude,
+        longitude,
+    } = body;
+
+    const data = {
+        name,
+        city,
+        description,
+        departmentId: parseInt(departmentId),
+        latitude: Number(latitude),
+        longitude: Number(longitude),
+    };
+
+    if (file) {
+        data.photo = `/uploads/${file.filename}`;
+    }
+
+    return data
+}
+
 async function createPlace(req, res) {
     try {
-        const placeData = req.body;
-
-        if (req.file) {
-            placeData.photo = `/uploads/${req.file.filename}`;
-        }
+        const placeData = placeDataBuilder(req.body, req.file);
 
         const newPlace = await placeService.createPlace(placeData);
+
         res.status(201).json({ newPlace,  message: "Lieu créé avec succès" });
     } catch (error) {
         res.status(400).json({ error: error.message });
@@ -38,30 +62,10 @@ async function createPlace(req, res) {
 async function editPlace(req, res) {
     try {
         const id = parseInt(req.params.id);
+        const updatedPlaceData = placeDataBuilder(req.body, req.file);
 
-        const {
-            name,
-            city,
-            description,
-            departmentId,
-            latitude,
-            longitude,
-        } = req.body;
+        const updatedPlace = await placeService.editPlace(id, updatedPlaceData);
 
-        const updatedData = {
-            name,
-            city,
-            description,
-            departmentId: parseInt(departmentId),
-            latitude: Number(latitude),
-            longitude: Number(longitude),
-        };
-
-        if (req.file) {
-            updatedData.photo = `/uploads/${req.file.filename}`;
-        }
-
-        const updatedPlace = await placeService.editPlace(id, updatedData);
         res.status(201).json({ updatedPlace, message: "Lieu modifié avec succès" });
     } catch (error) {
         console.error("Erreur lors de la modification du lieu :", error);
