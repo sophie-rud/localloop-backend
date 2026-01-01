@@ -70,6 +70,37 @@ async function saveRefreshToken(refreshToken, { userId, email }) {
     })
 }
 
+async function findByResetToken(token) {
+    return prisma.user.findFirst({
+        where: {
+            resetPasswordToken: token,
+            resetPasswordExpires: { gt: new Date() },
+        },
+    });
+}
+
+async function updateResetToken(userId, token, expiresAt) {
+    return prisma.user.update({
+        where: {id: userId},
+        data: {
+            resetPasswordToken: token,
+            resetPasswordExpires: expiresAt
+        }
+    });
+}
+
+async function updatePassword(userId, hashedPassword) {
+    return prisma.user.update({
+        where: {id: userId},
+        data: {
+            password: hashedPassword,
+            resetPasswordToken: null,
+            resetPasswordExpires: null
+        }
+    });
+}
+
+
 export default {
     findAll,
     findById,
@@ -78,4 +109,7 @@ export default {
     updateUser,
     deleteUser,
     saveRefreshToken,
+    findByResetToken,
+    updateResetToken,
+    updatePassword,
 };

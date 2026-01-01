@@ -1,9 +1,9 @@
+import dotenv from 'dotenv';
+dotenv.config();
+
 import express from 'express';
 import cookieParser from 'cookie-parser';
 import cors from "cors";
-
-const app = express();
-
 import trackRoutes from './routes/trackRoutes.js';
 import stepRoutes from './routes/stepRoutes.js';
 import placeRoutes from './routes/placeRoutes.js';
@@ -14,6 +14,9 @@ import departmentRoutes from './routes/departmentRoutes.js';
 import stepController from "./controllers/stepController.js";
 import path from "path";
 import fs from 'fs';
+import resetPasswordRoutes from "./routes/resetPasswordRoutes.js";
+
+const app = express();
 
 // Create uploads if it doesn't exist
 const uploadsDir = path.join(process.cwd(), 'uploads');
@@ -34,6 +37,7 @@ app.get('/steps', stepController.getAllSteps);
 app.use('/places', placeRoutes);
 app.use('/', userRoutes);
 app.use('/', authRoutes);
+app.use('/', resetPasswordRoutes);
 app.use('/themes', themeRoutes);
 app.use('/departments', departmentRoutes);
 
