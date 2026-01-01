@@ -8,7 +8,7 @@ const refreshTokenMiddleware = async (req, res, next) => {
             throw Error("Token manquant");
         }
 
-        const decodedToken = jwt.verify(token, "refreshSecret");
+        const decodedToken = jwt.verify(token, process.env.JWT_REFRESH_SECRET);
         const user = await userService.getUserByEmail(decodedToken.sub);
 
         if (token !== user.refreshToken) {
@@ -18,7 +18,8 @@ const refreshTokenMiddleware = async (req, res, next) => {
         req.refreshPayload = { email: decodedToken.sub, userId: decodedToken.userId };
         next();
     } catch (error) {
-        res.status(401).json({ error });
+        console.error('Erreur dans refreshTokenMiddleware:', error.message);
+        res.status(401).json({ error: error.message });
     }
 };
 

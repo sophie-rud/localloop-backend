@@ -17,16 +17,16 @@ async function signIn(email, password) {
 
     const accessToken = jwt.sign(
         { sub: email, userId: user.id },
-        "process.env.JWT_ACCESS_SECRET",
+        process.env.JWT_ACCESS_SECRET,
         { expiresIn: "10m" }
     );
     const refreshToken = jwt.sign(
         { sub: email, userId: user.id },
-        "process.env.JWT_REFRESH_SECRET",
+        process.env.JWT_REFRESH_SECRET,
         { expiresIn: "7d" }
     );
 
-    await userRepository.saveRefreshToken(refreshToken, { email });
+    await userRepository.saveRefreshToken(refreshToken, { userId: user.id });
 
     return { accessToken, refreshToken, user };
 }
@@ -40,16 +40,16 @@ async function refresh(userId, email) {
 
     const accessToken = jwt.sign(
         { sub: email, userId: userId },
-        "process.env.JWT_ACCESS_SECRET",
+        process.env.JWT_ACCESS_SECRET,
         { expiresIn: "10m" }
     );
     const refreshToken = jwt.sign(
         { sub: email, userId: userId },
-        "process.env.JWT_REFRESH_SECRET",
+        process.env.JWT_REFRESH_SECRET,
         { expiresIn: "7d" }
     );
 
-    await userRepository.saveRefreshToken(refreshToken, { userId });
+    await userRepository.saveRefreshToken(refreshToken, { userId, email });
 
     return { accessToken, refreshToken };
 }
