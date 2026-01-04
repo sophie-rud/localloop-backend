@@ -8,5 +8,6 @@ router.get('/:id', stepController.getStepByIdAndTrack);
 router.post('/', upload.single('photo'), stepController.createStep);
 router.put('/:id', upload.single('photo'), stepController.editStep);
 router.delete('/:id', stepController.removeStep);
+router.patch('/:id/reorder', stepController.reorderSteps);
 
 export default router;

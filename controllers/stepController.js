@@ -106,6 +106,35 @@ async function removeStep(req, res) {
     }
 }
 
+async function reorderSteps(req, res) {
+    try {
+        const { trackId, id } = req.params;
+        const { direction } = req.body;
+
+        if (!['up', 'down'].includes(direction)) {
+            return res.status(400).json({
+                message: 'Direction invalide. Utilisez "up" ou "down"'
+            });
+        }
+
+        const updatedSteps = await stepService.reorderSteps(trackId, id, direction);
+
+        res.status(200).json({
+            message: 'Ordre mis à jour',
+            steps: updatedSteps
+        });
+
+    } catch (error) {
+        console.error('Erreur:', error);
+
+        if (error.message.includes('Impossible')) {
+            return res.status(400).json({ message: error.message });
+        }
+
+        res.status(500).json({ message: 'Erreur serveur' });
+    }
+}
+
 export default {
     getAllSteps,
     getAllStepsByTrack,
@@ -114,4 +143,5 @@ export default {
     createStep,
     editStep,
     removeStep,
+    reorderSteps,
 }

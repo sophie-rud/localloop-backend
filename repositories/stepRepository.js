@@ -22,7 +22,7 @@ async function findById(stepId) {
 }
 
 async function findByIdAndTrack(stepId, trackId) {
-    const step =  await prisma.step.findUnique({
+    const step =  await prisma.step.findFirst({
         where: {
             id: parseInt(stepId),
             trackId: parseInt(trackId),
@@ -31,7 +31,6 @@ async function findByIdAndTrack(stepId, trackId) {
 
     return step;
 }
-
 
 async function createStep(data) {
     const newStep = await prisma.step.create({ data });
@@ -59,6 +58,24 @@ async function deleteStep(stepId, trackId) {
     });
 }
 
+async function switchStepOrders(stepAId, stepAOrder, stepBId, stepBOrder) {
+    await prisma.$transaction([
+        // Temporary update to avoid unique constraint conflicts
+        prisma.step.update({
+            where: { id: stepAId },
+            data: { stepOrder: -1 }
+        }),
+        prisma.step.update({
+            where: { id: stepBId },
+            data: { stepOrder: stepAOrder }
+        }),
+        prisma.step.update({
+            where: { id: stepAId },
+            data: { stepOrder: stepBOrder }
+        })
+    ]);
+}
+
 export default {
     findAll,
     findAllByTrackId,
@@ -67,4 +84,5 @@ export default {
     createStep,
     updateStep,
     deleteStep,
+    switchStepOrders,
 };

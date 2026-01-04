@@ -86,6 +86,42 @@ async function removeStep(stepId, trackId) {
     return await stepRepository.deleteStep(stepId, trackId);
 }
 
+async function reorderSteps(trackId, id, direction) {
+    const steps = await stepRepository.findAllByTrackId(trackId);
+
+    const currentStep = steps.find(step => step.id === parseInt(id));
+
+    if (!currentStep) {
+        throw new Error('Étape non trouvée');
+    }
+
+    const currentStepOrder = currentStep.stepOrder;
+
+    if (direction === 'up' && currentStepOrder === 1) {
+        throw new Error('\'L\'étape est déjà en première position');
+    }
+
+    if (direction === 'down' && currentStepOrder === steps.length) {
+        throw new Error('L\'étape est déjà en dernière position');
+    }
+
+    const targetStepOrder = direction === 'up' ? currentStepOrder - 1 : currentStepOrder + 1;
+    const targetStep = steps.find(step => step.stepOrder === targetStepOrder);
+
+    if (!targetStep) {
+        throw new Error('Étape cible non trouvée');
+    }
+
+    await stepRepository.switchStepOrders(
+        currentStep.id,
+        currentStep.stepOrder,
+        targetStep.id,
+        targetStep.stepOrder
+    );
+
+    return await stepRepository.findAllByTrackId(trackId);
+}
+
 export default {
     getAllSteps,
     getAllStepsByTrack,
@@ -94,4 +130,5 @@ export default {
     createStep,
     editStep,
     removeStep,
+    reorderSteps,
 }
