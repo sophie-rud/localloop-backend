@@ -15,6 +15,7 @@ import stepController from "./controllers/stepController.js";
 import path from "path";
 import fs from 'fs';
 import resetPasswordRoutes from "./routes/resetPasswordRoutes.js";
+import favoriteRoutes from "./routes/favoriteRoutes.js";
 
 const app = express();
 
@@ -35,6 +36,7 @@ app.use('/tracks', trackRoutes);
 app.use('/tracks/:trackId/steps', stepRoutes);
 app.get('/steps', stepController.getAllSteps);
 app.use('/places', placeRoutes);
+app.use('/favorites', favoriteRoutes);
 app.use('/', userRoutes);
 app.use('/', authRoutes);
 app.use('/', resetPasswordRoutes);
