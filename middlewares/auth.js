@@ -8,7 +8,7 @@ const auth = (req, res, next) => {
             throw new Error("Non autorisé");
         }
 
-        const decodedToken = jwt.verify(token, "process.env.JWT_ACCESS_SECRET");
+        const decodedToken = jwt.verify(token, process.env.JWT_ACCESS_SECRET);
 
         req.auth = { email: decodedToken.sub, userId: decodedToken.userId };
         next();
