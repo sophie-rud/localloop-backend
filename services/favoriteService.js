@@ -1,7 +1,11 @@
 import favoriteRepository from '../repositories/favoriteRepository.js';
 
-async function getUserFavorites(userId) {
-    return await favoriteRepository.findByUserId(userId);
+async function getUserFavoritesIds(userId) {
+    return await favoriteRepository.findFavoritesIdsByUserId(userId);
+}
+
+async function getUserFavoritesWithDetails(userId) {
+    return await favoriteRepository.findFavoritesDetailsByUserId(userId);
 }
 
 async function addFavorite(userId, trackId) {
@@ -13,7 +17,8 @@ async function removeFavorite(userId, trackId) {
 }
 
 export default {
-    getUserFavorites,
+    getUserFavoritesIds,
+    getUserFavoritesWithDetails,
     addFavorite,
     removeFavorite,
 }

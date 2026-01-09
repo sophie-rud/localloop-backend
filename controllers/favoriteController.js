@@ -1,10 +1,21 @@
 import favoriteService from "../services/favoriteService.js";
 
-async function getUserFavorites(req, res) {
+async function getUserFavoritesIds(req, res) {
     const userId = req.auth.userId;
 
     try {
-        const favorites = await favoriteService.getUserFavorites(userId);
+        const favoritesIds = await favoriteService.getUserFavoritesIds(userId);
+        res.json(favoritesIds);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+}
+
+async function getUserFavoritesWithDetails(req, res) {
+    const userId = req.auth.userId;
+
+    try {
+        const favorites = await favoriteService.getUserFavoritesWithDetails(userId);
         res.json(favorites);
     } catch (error) {
         res.status(500).json({ error: error.message });
@@ -42,7 +53,8 @@ async function removeFavorite(req, res) {
 }
 
 export default {
-    getUserFavorites,
+    getUserFavoritesIds,
+    getUserFavoritesWithDetails,
     addFavorite,
     removeFavorite,
 }

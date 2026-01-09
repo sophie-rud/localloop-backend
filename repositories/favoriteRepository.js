@@ -1,6 +1,6 @@
 import prisma from '../config/prisma.js';
 
-async function findByUserId(userId) {
+async function findFavoritesIdsByUserId(userId) {
     const favorites = await prisma.favoriteTracks.findMany({
         where: {
             userId: parseInt(userId),
@@ -11,6 +11,31 @@ async function findByUserId(userId) {
     });
 
     return favorites.map(f => f.trackId);
+}
+
+async function findFavoritesDetailsByUserId(userId) {
+    const favorites = await prisma.favoriteTracks.findMany({
+        where: {
+            userId: parseInt(userId),
+        },
+        include: {
+            track: {
+                include: {
+                    steps: {
+                        include: {
+                            place: {
+                                include: {
+                                    department: true
+                                }
+                            }
+                        }
+                    },
+                    theme: true
+                }
+            }
+        },
+    });
+    return favorites.map(f => f.track);
 }
 
 async function createFavorite(userId, trackId) {
@@ -36,7 +61,8 @@ async function deleteFavorite(userId, trackId) {
 }
 
 export default {
-    findByUserId,
+    findFavoritesIdsByUserId,
+    findFavoritesDetailsByUserId,
     createFavorite,
     deleteFavorite,
 };
