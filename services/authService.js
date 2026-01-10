@@ -11,7 +11,7 @@ async function signIn(email, password) {
         throw error;
     }
 
-    if (user.isActive === false) {
+    if (!user.isActive) {
         const error = new Error ("Votre compte a été suspendu");
         error.status = 403;
         throw error;
