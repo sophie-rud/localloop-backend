@@ -6,7 +6,15 @@ async function signIn(email, password) {
     const user = await userRepository.findByEmail(email, {includeTracks: true});
 
     if (!user) {
-        throw new Error ("Utilisateur non trouvé");
+        const error = new Error ("Utilisateur non trouvé");
+        error.status = 401;
+        throw error;
+    }
+
+    if (user.isActive === false) {
+        const error = new Error ("Votre compte a été suspendu");
+        error.status = 403;
+        throw error;
     }
 
     const isVerify = await bcrypt.compare(password, user.password);
