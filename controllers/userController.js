@@ -62,6 +62,15 @@ async function editUser(req, res) {
     }
 }
 
+async function toggleBlockUser(req, res) {
+    try {
+        const updatedUser = await userService.toggleBlockUser(req.params.id);
+        res.json(updatedUser);
+    } catch (err) {
+        res.status(400).json({ error: err.message });
+    }
+}
+
 async function removeUser(req, res) {
     const id = parseInt(req.params.id)
 
@@ -143,6 +152,7 @@ export default {
     getUserById,
     createUser,
     editUser,
+    toggleBlockUser,
     removeUser,
     getProfile,
     editProfile,

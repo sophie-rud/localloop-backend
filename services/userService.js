@@ -82,6 +82,18 @@ async function editUserByAdmin(id, data) {
     return await userRepository.updateUser(id, data);
 }
 
+async function toggleBlockUser(id) {
+    const user = await userRepository.findById(id);
+    if (!user) throw new Error("Utilisateur non trouvé");
+
+    if (user.roleId === 2) throw new Error("Impossible de bloquer un admin");
+
+    user.isActive = !user.isActive;
+    await userRepository.updateUser(id, { isActive: user.isActive });
+
+    return user;
+}
+
 async function removeUser(id) {
     return await userRepository.deleteUser(id);
 }
@@ -118,6 +130,7 @@ export default {
     signupUser,
     createUserByAdmin,
     editUserByAdmin,
+    toggleBlockUser,
     removeUser,
     getUserProfile,
     editProfile,

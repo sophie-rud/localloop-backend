@@ -8,6 +8,7 @@ router.get('/users', userController.getAllUsers);
 router.get('/users/:id', userController.getUserById);
 router.post('/users', userController.createUser);
 router.put('/users/:id', userController.editUser);
+router.post('/users/:id/toggle-block', userController.toggleBlockUser);
 router.delete('/users/:id', userController.removeUser);
 router.get('/me', auth, userController.getProfile);
 router.put('/me', auth, upload.single('avatar'), userController.editProfile);
