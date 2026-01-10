@@ -11,7 +11,7 @@ async function signUp (req, res) {
 
         res.status(201).json(result);
     } catch (error) {
-        res.status(500).json({ message: error.message || "Erreur interne" });
+        res.status(500).json({ error: error.message || "Erreur interne" });
     }
 }
 
@@ -46,7 +46,7 @@ async function signIn(req, res) {
                 }
             });
     } catch (error) {
-        res.status(401).json({ message: error.message || "Authentification échouée" });
+        res.status(error.status || 401).json({ error: error.message || "Authentification échouée" });
     }
 }
 
@@ -90,7 +90,7 @@ async function logout(req, res) {
             .status(200)
             .json({ message: "Déconnexion réussie" });
     } catch (error) {
-        res.status(500).json({ message: error.message || "Erreur lors de la déconnexion" });
+        res.status(500).json({ error: error.message || "Erreur lors de la déconnexion" });
     }
 }
 
