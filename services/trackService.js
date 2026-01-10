@@ -1,7 +1,10 @@
 import trackRepository from '../repositories/trackRepository.js';
+import trackFilters from '../utils/trackFilters.js';
 
-async function getAllTracks() {
-    return await trackRepository.findAll();
+async function getFilteredTracks(filters) {
+    const tracks = await trackRepository.findAll();
+
+    return trackFilters.applyFilters(tracks, filters);
 }
 
 async function getTrackById(id) {
@@ -33,7 +36,7 @@ async function removeTrack(id) {
 }
 
 export default {
-    getAllTracks,
+    getFilteredTracks,
     getTrackById,
     createTrack,
     editTrack,

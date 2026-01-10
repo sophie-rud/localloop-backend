@@ -2,7 +2,17 @@ import trackService from '../services/trackService.js';
 
 async function getAllTracks(req, res) {
     try {
-        const tracks = await trackService.getAllTracks();
+        const { query, difficulty, duration, distance } = req.query;
+
+        const filters = {
+            query: query?.trim() || null,
+            difficulty: difficulty?.trim() || null,
+            duration: duration?.trim() || null,
+            distance: distance?.trim() || null,
+        };
+
+        const tracks = await trackService.getFilteredTracks(filters);
+
         res.json(tracks);
     } catch (error) {
         res.status(400).json({ error: error.message });
