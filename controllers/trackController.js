@@ -63,7 +63,10 @@ async function createTrack(req, res) {
     try {
         const trackData = trackDataBuilder(req.body, req.file);
 
-        const newTrack = await trackService.createTrack(trackData);
+        const newTrack = await trackService.createTrack({
+            ...trackData,
+            userId: req.auth.userId,
+        });
 
         res.status(201).json(newTrack);
     } catch (error) {
