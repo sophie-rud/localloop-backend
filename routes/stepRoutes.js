@@ -2,12 +2,48 @@ import express from 'express';
 const router = express.Router({ mergeParams: true });
 import stepController from '../controllers/stepController.js';
 import upload from "../middlewares/multer-config.js";
+import validateStepMiddleware from "../middlewares/validate-step-middleware.js";
+import auth from "../middlewares/auth.js";
+import activeUserMiddleware from "../middlewares/active-user-middleware.js";
+import ownershipMiddleware from "../middlewares/ownership-middleware.js";
 
-router.get('/', stepController.getAllStepsByTrack);
-router.get('/:id', stepController.getStepByIdAndTrack);
-router.post('/', upload.single('photo'), stepController.createStep);
-router.put('/:id', upload.single('photo'), stepController.editStep);
-router.delete('/:id', stepController.removeStep);
-router.patch('/:id/reorder', stepController.reorderSteps);
+router.get('/',
+    stepController.getAllStepsByTrack
+);
+
+router.get('/:id',
+    stepController.getStepByIdAndTrack
+);
+
+router.post('/',
+    auth,
+    activeUserMiddleware,
+    upload.single('photo'),
+    validateStepMiddleware,
+    stepController.createStep
+);
+
+router.put('/:id',
+    auth,
+    activeUserMiddleware,
+    ownershipMiddleware({ type: 'step', param: 'id' }),
+    upload.single('photo'),
+    validateStepMiddleware,
+    stepController.editStep
+);
+
+router.delete('/:id',
+    auth,
+    activeUserMiddleware,
+    ownershipMiddleware({ type: 'step', param: 'id' }),
+    stepController.removeStep
+);
+
+router.patch('/:id/reorder',
+    auth,
+    activeUserMiddleware,
+    ownershipMiddleware({ type: 'step', param: 'id' }),
+    stepController.reorderSteps
+);
 
 export default router;
