@@ -1,21 +1,18 @@
 import trackService from '../services/TrackService.js';
-import stepService from '../services/StepService.js';
 
 function ownershipMiddleware({ type, param }) {
     return async (req, res, next) => {
         try {
+            // Track ownership validation
             let track;
 
             if (type === 'track') {
                 track = await trackService.getTrackById(req.params[param]);
             }
 
+            // Step ownership validation
             if (type === 'step') {
-                const step = await stepService.getStepById(req.params[param]);
-                if (!step) {
-                    return res.status(404).json({ message: "Étape introuvable" });
-                }
-                track = await trackService.getTrackById(step.trackId);
+                track = await trackService.getTrackById(req.params.trackId);
             }
 
             if (!track) {
