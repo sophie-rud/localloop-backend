@@ -26,7 +26,7 @@ router.post('/',
 router.put('/:id',
     auth,
     activeUserMiddleware,
-    ownershipMiddleware({ type: 'track', param: 'id' }),
+    ownershipMiddleware({ param: 'id' }),
     upload.single('photo'),
     validateTrackMiddleware,
     trackController.editTrack
@@ -35,7 +35,7 @@ router.put('/:id',
 router.delete('/:id',
     auth,
     activeUserMiddleware,
-    ownershipMiddleware({ type: 'track', param: 'id' }),
+    ownershipMiddleware({ param: 'id' }),
     trackController.removeTrack
 );
 

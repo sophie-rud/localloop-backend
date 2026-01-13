@@ -26,7 +26,7 @@ router.post('/',
 router.put('/:id',
     auth,
     activeUserMiddleware,
-    ownershipMiddleware({ type: 'step', param: 'id' }),
+    ownershipMiddleware({ param: 'trackId' }),
     upload.single('photo'),
     validateStepMiddleware,
     stepController.editStep
@@ -35,14 +35,14 @@ router.put('/:id',
 router.delete('/:id',
     auth,
     activeUserMiddleware,
-    ownershipMiddleware({ type: 'step', param: 'id' }),
+    ownershipMiddleware({ param: 'trackId' }),
     stepController.removeStep
 );
 
 router.patch('/:id/reorder',
     auth,
     activeUserMiddleware,
-    ownershipMiddleware({ type: 'step', param: 'id' }),
+    ownershipMiddleware({ param: 'trackId' }),
     stepController.reorderSteps
 );
 

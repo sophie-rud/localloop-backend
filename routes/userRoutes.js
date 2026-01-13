@@ -6,12 +6,12 @@ import upload from "../middlewares/multer-config.js";
 import adminRoleMiddleware from "../middlewares/admin-role-middleware.js";
 import validateEmailUsername from "../middlewares/validate-email-username-middleware.js";
 
-router.get('/users', adminRoleMiddleware, userController.getAllUsers);
-router.get('/users/:id', adminRoleMiddleware, userController.getUserById);
-router.post('/users', adminRoleMiddleware, validateEmailUsername, userController.createUser);
-router.put('/users/:id', adminRoleMiddleware,validateEmailUsername, userController.editUser);
-router.post('/users/:id/toggle-block', adminRoleMiddleware, userController.toggleBlockUser);
-router.delete('/users/:id', adminRoleMiddleware, userController.removeUser);
+router.get('/users', auth, adminRoleMiddleware, userController.getAllUsers);
+router.get('/users/:id', auth, adminRoleMiddleware, userController.getUserById);
+router.post('/users', auth, adminRoleMiddleware, validateEmailUsername, userController.createUser);
+router.put('/users/:id', auth, adminRoleMiddleware, userController.editUser);
+router.post('/users/:id/toggle-block', auth, adminRoleMiddleware, userController.toggleBlockUser);
+router.delete('/users/:id', auth, adminRoleMiddleware, userController.removeUser);
 
 // Routes /me (profile and resources related to the logged-in user)
 router.get('/me', auth, userController.getProfile);
