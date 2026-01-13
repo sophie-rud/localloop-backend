@@ -2,6 +2,7 @@ import prisma from '../config/prisma.js';
 
 async function findAll() {
     const tracks = await prisma.track.findMany({
+        where: { isPublished: true },
         include: {
             steps: {
                 include: {
