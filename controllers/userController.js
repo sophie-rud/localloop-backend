@@ -1,4 +1,5 @@
 import userService from '../services/userService.js';
+import trackService from "../services/trackService.js";
 
 async function getAllUsers(req, res) {
     try {
@@ -147,6 +148,18 @@ async function removeProfile(req, res) {
     }
 }
 
+async function getUserTracks(req, res, next) {
+    try {
+        const userId = Number(req.auth.userId);
+
+        const tracks = await trackService.getTracksByUser(userId);
+        res.json(tracks);
+    } catch (err) {
+        next(err);
+    }
+}
+
+
 export default {
     getAllUsers,
     getUserById,
@@ -157,4 +170,5 @@ export default {
     getProfile,
     editProfile,
     removeProfile,
+    getUserTracks,
 }

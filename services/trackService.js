@@ -35,10 +35,15 @@ async function removeTrack(id) {
     return await trackRepository.deleteTrack(id);
 }
 
+async function getTracksByUser(userId) {
+    return await trackRepository.findByUserId(userId);
+}
+
 export default {
     getFilteredTracks,
     getTrackById,
     createTrack,
     editTrack,
     removeTrack,
+    getTracksByUser,
 }

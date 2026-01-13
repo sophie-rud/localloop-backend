@@ -15,6 +15,7 @@ router.delete('/users/:id', auth, adminRoleMiddleware, userController.removeUser
 
 // Routes /me (profile and resources related to the logged-in user)
 router.get('/me', auth, userController.getProfile);
+router.get('/me/tracks', auth, userController.getUserTracks);
 router.put('/me', auth, upload.single('avatar'), validateEmailUsername, userController.editProfile);
 router.delete('/me', auth, userController.removeProfile);
 

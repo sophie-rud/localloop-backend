@@ -39,6 +39,27 @@ async function findById(id) {
     return track;
 }
 
+async function findByUserId(userId) {
+    const userTracks = await prisma.track.findMany({
+        where: { userId: parseInt(userId) },
+        include: {
+            steps: {
+                orderBy: { stepOrder: 'asc' },
+                include: {
+                    place: {
+                        include: {
+                            department: true,
+                        },
+                    }
+                },
+            },
+            theme: true
+        },
+    });
+
+    return userTracks;
+}
+
 async function createTrack(data) {
     const newTrack = await prisma.track.create({ data });
     return newTrack;
@@ -62,6 +83,7 @@ async function deleteTrack(id) {
 export default {
     findAll,
     findById,
+    findByUserId,
     createTrack,
     updateTrack,
     deleteTrack,
