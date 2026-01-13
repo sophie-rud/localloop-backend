@@ -1,19 +1,15 @@
 import trackService from '../services/TrackService.js';
 
-function ownershipMiddleware({ type, param }) {
+function ownershipMiddleware({ param }) {
     return async (req, res, next) => {
         try {
+            // Skip ownership validation if user has ADMIN role
+            if (req.auth.roleId === 2) {
+                return next();
+            }
+
             // Track ownership validation
-            let track;
-
-            if (type === 'track') {
-                track = await trackService.getTrackById(req.params[param]);
-            }
-
-            // Step ownership validation
-            if (type === 'step') {
-                track = await trackService.getTrackById(req.params.trackId);
-            }
+            const track = await trackService.getTrackById(req.params[param]);
 
             if (!track) {
                 return res.status(404).json({ message: "Parcours introuvable" });
