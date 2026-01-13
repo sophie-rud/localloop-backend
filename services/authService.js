@@ -24,7 +24,7 @@ async function signIn(email, password) {
     }
 
     const accessToken = jwt.sign(
-        { sub: email, userId: user.id },
+        { sub: email, userId: user.id, roleId: user.roleId },
         process.env.JWT_ACCESS_SECRET,
         { expiresIn: "10m" }
     );
