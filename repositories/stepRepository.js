@@ -76,6 +76,12 @@ async function switchStepOrders(stepAId, stepAOrder, stepBId, stepBOrder) {
     ]);
 }
 
+async function countByTrackId(trackId) {
+    return prisma.step.count({
+        where: { trackId }
+    });
+}
+
 export default {
     findAll,
     findAllByTrackId,
@@ -85,4 +91,5 @@ export default {
     updateStep,
     deleteStep,
     switchStepOrders,
+    countByTrackId,
 };

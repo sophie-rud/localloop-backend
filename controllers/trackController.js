@@ -1,4 +1,5 @@
 import trackService from '../services/trackService.js';
+import stepService from "../services/stepService.js";
 
 async function getAllTracks(req, res) {
     try {
@@ -99,10 +100,41 @@ async function removeTrack(req, res) {
     }
 }
 
+async function publishTrack(req, res) {
+    try {
+        const trackId = Number(req.params.id);
+
+        const stepsCount = await stepService.countByTrackId(trackId);
+        if (stepsCount < 3) {
+            return res.status(400).json({
+                message: "Un parcours doit contenir au moins 3 étapes pour être publié"
+            });
+        }
+
+        const track = await trackService.editTrack(trackId, { isPublished: true });
+        res.json(track);
+    } catch (error) {
+        res.status(400).json({ error: error.message });
+    }
+}
+
+async function unpublishTrack(req, res) {
+    try {
+        const trackId = Number(req.params.id);
+        const track = await trackService.editTrack(trackId, { isPublished: false });
+        res.json(track);
+    } catch (error) {
+        res.status(400).json({ error: error.message });
+    }
+}
+
+
 export default {
     getAllTracks,
     getTrackById,
     createTrack,
     editTrack,
     removeTrack,
+    publishTrack,
+    unpublishTrack,
 }

@@ -122,6 +122,10 @@ async function reorderSteps(trackId, id, direction) {
     return await stepRepository.findAllByTrackId(trackId);
 }
 
+async function countByTrackId(trackId) {
+    return stepRepository.countByTrackId(trackId);
+}
+
 export default {
     getAllSteps,
     getAllStepsByTrack,
@@ -131,4 +135,5 @@ export default {
     editStep,
     removeStep,
     reorderSteps,
+    countByTrackId,
 }

@@ -39,4 +39,16 @@ router.delete('/:id',
     trackController.removeTrack
 );
 
+router.patch('/:id/publish',
+    auth,
+    ownershipMiddleware({ param: 'id' }),
+    trackController.publishTrack
+);
+
+router.patch('/:id/unpublish',
+    auth,
+    ownershipMiddleware({ param: 'id' }),
+    trackController.unpublishTrack
+);
+
 export default router;

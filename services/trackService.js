@@ -12,22 +12,10 @@ async function getTrackById(id) {
 }
 
 async function createTrack(track) {
-    const { title } = track;
-
-    if(!title) {
-        throw new Error("Vous avez oublié le titre du parcours !");
-    }
-
     return await trackRepository.createTrack(track);
 }
 
 async function editTrack(id, data) {
-    const { title } = data;
-
-    if(!title) {
-        throw new Error("Vous avez oublié le titre du parcours !");
-    }
-
     return await trackRepository.updateTrack(id, data);
 }
 
