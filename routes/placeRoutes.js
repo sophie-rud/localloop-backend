@@ -4,6 +4,7 @@ import placeController from '../controllers/placeController.js';
 import upload from "../middlewares/multer-config.js";
 import adminRoleMiddleware from "../middlewares/admin-role-middleware.js";
 import validatePlaceMiddleware from "../middlewares/validate-place-middleware.js";
+import auth from "../middlewares/auth.js";
 
 router.get('/',
     placeController.getAllPlaces
@@ -14,20 +15,23 @@ router.get('/:id',
 );
 
 router.post('/',
+    auth,
     adminRoleMiddleware,
-    validatePlaceMiddleware,
     upload.single('photo'),
+    validatePlaceMiddleware,
     placeController.createPlace
 );
 
 router.put('/:id',
+    auth,
     adminRoleMiddleware,
-    validatePlaceMiddleware,
     upload.single('photo'),
+    validatePlaceMiddleware,
     placeController.editPlace
 );
 
 router.delete('/:id',
+    auth,
     adminRoleMiddleware,
     placeController.removePlace
 );
