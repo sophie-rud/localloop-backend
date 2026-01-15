@@ -4,6 +4,9 @@ dotenv.config();
 import express from 'express';
 import cookieParser from 'cookie-parser';
 import cors from "cors";
+import rateLimit from 'express-rate-limit';
+import helmet from 'helmet';
+import hpp from 'hpp';
 import trackRoutes from './routes/trackRoutes.js';
 import stepRoutes from './routes/stepRoutes.js';
 import placeRoutes from './routes/placeRoutes.js';
@@ -28,13 +31,27 @@ if (!fs.existsSync(uploadsDir)) {
 app.use(express.json());
 app.use(cookieParser());
 app.use(cors({
-    origin: "http://localhost:5173",
+    origin: process.env.CLIENT_URL,
     credentials: true
 }));
 
+const limiter = rateLimit({
+    windowMs: 5 * 60 * 1000, // 5 minutes
+    max: 1500, // Maximum 1500 requêtes par IP
+    message: "Trop de requêtes, veuillez réessayer plus tard.",
+});
+
+app.use(helmet());
+// app.use(helmet({
+//     contentSecurityPolicy: false, // Désactiver si cela bloque vos scripts
+//     crossOriginEmbedderPolicy: false, // Désactiver si vous chargez des ressources externes
+// }));
+app.use(hpp());
+app.use(limiter);
+
 app.use('/tracks', trackRoutes);
 app.use('/tracks/:trackId/steps', stepRoutes);
-app.get('/steps', stepController.getAllSteps);
+// app.get('/steps', stepController.getAllSteps);
 app.use('/places', placeRoutes);
 app.use('/favorites', favoriteRoutes);
 app.use('/', userRoutes);
