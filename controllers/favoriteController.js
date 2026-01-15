@@ -1,28 +1,28 @@
 import favoriteService from "../services/favoriteService.js";
 
-async function getUserFavoritesIds(req, res) {
+async function getUserFavoritesIds(req, res, next) {
     const userId = req.auth.userId;
 
     try {
         const favoritesIds = await favoriteService.getUserFavoritesIds(userId);
         res.json(favoritesIds);
     } catch (error) {
-        res.status(500).json({ error: error.message });
+        next(error);
     }
 }
 
-async function getUserFavoritesWithDetails(req, res) {
+async function getUserFavoritesWithDetails(req, res, next) {
     const userId = req.auth.userId;
 
     try {
         const favorites = await favoriteService.getUserFavoritesWithDetails(userId);
         res.json(favorites);
     } catch (error) {
-        res.status(500).json({ error: error.message });
+        next(error);
     }
 }
 
-async function addFavorite(req, res) {
+async function addFavorite(req, res, next) {
     const userId = req.auth.userId;
     const trackId = parseInt(req.params.trackId);
 
@@ -34,12 +34,12 @@ async function addFavorite(req, res) {
         const favorite = await favoriteService.addFavorite(userId, trackId);
         res.status(201).json({ message: 'Favori ajouté', favorite, trackId });
     } catch (error) {
-        console.error('Erreur addFavorite:', error);
-        res.status(500).json({ error: error.message });
+        // console.error('Erreur addFavorite:', error);
+        next(error);
     }
 }
 
-async function removeFavorite(req, res) {
+async function removeFavorite(req, res, next) {
     const userId = req.auth.userId;
     const trackId = parseInt(req.params.trackId);
 
@@ -47,8 +47,8 @@ async function removeFavorite(req, res) {
         await favoriteService.removeFavorite(userId, trackId);
         res.status(204).send();
     } catch (error) {
-        console.error('Erreur removeFavorite:', error);
-        res.status(500).json({ error: error.message });
+        // console.error('Erreur removeFavorite:', error);
+        next(error);
     }
 }
 

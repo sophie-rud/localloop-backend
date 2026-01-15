@@ -1,27 +1,8 @@
 import userRepository from '../repositories/userRepository.js';
-import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
-async function signIn(email, password) {
+async function signIn(email) {
     const user = await userRepository.findByEmail(email, {includeTracks: true});
-
-    if (!user) {
-        const error = new Error ("Utilisateur non trouvé");
-        error.status = 401;
-        throw error;
-    }
-
-    if (!user.isActive) {
-        const error = new Error ("Votre compte a été suspendu");
-        error.status = 403;
-        throw error;
-    }
-
-    const isVerify = await bcrypt.compare(password, user.password);
-
-    if (!isVerify) {
-        throw new Error ("Non autorisé");
-    }
 
     const accessToken = jwt.sign(
         { sub: email, userId: user.id, roleId: user.roleId },

@@ -1,7 +1,7 @@
 import trackService from '../services/trackService.js';
 import stepService from "../services/stepService.js";
 
-async function getAllTracks(req, res) {
+async function getAllTracks(req, res, next) {
     try {
         const { query, difficulty, duration, distance } = req.query;
 
@@ -16,18 +16,18 @@ async function getAllTracks(req, res) {
 
         res.json(tracks);
     } catch (error) {
-        res.status(400).json({ error: error.message });
+        next(error);
     }
 }
 
-async function getTrackById(req, res) {
+async function getTrackById(req, res, next) {
     const id = parseInt(req.params.id)
 
     try {
         const track = await trackService.getTrackById(id);
         res.json(track);
     } catch (error) {
-        res.status(400).json({ error: error.message });
+        next(error);
     }
 }
 
@@ -60,7 +60,7 @@ function trackDataBuilder(body, file) {
     return data;
 }
 
-async function createTrack(req, res) {
+async function createTrack(req, res, next) {
     try {
         const trackData = trackDataBuilder(req.body, req.file);
 
@@ -71,11 +71,11 @@ async function createTrack(req, res) {
 
         res.status(201).json(newTrack);
     } catch (error) {
-        res.status(400).json({ error: error.message });
+        next(error);
     }
 }
 
-async function editTrack(req, res) {
+async function editTrack(req, res, next) {
     try {
         const id = parseInt(req.params.id);
         const updatedTrackData = trackDataBuilder(req.body, req.file);
@@ -85,22 +85,22 @@ async function editTrack(req, res) {
         res.status(201).json({ updatedTrack, message: "Parcours modifié avec succès" });
     } catch (error) {
         console.error("Erreur lors de la modification du parcours :", error);
-        res.status(400).json({ error: error.message });
+        next(error);
     }
 }
 
-async function removeTrack(req, res) {
+async function removeTrack(req, res, next) {
     const id = parseInt(req.params.id)
 
     try {
         await trackService.removeTrack(id);
         res.status(201).json({ message: "Parcours supprimé avec succès" });
     } catch (error) {
-        res.status(400).json({ error: error.message });
+        next(error);
     }
 }
 
-async function publishTrack(req, res) {
+async function publishTrack(req, res, next) {
     try {
         const trackId = Number(req.params.id);
 
@@ -114,17 +114,17 @@ async function publishTrack(req, res) {
         const track = await trackService.editTrack(trackId, { isPublished: true });
         res.json(track);
     } catch (error) {
-        res.status(400).json({ error: error.message });
+        next(error);
     }
 }
 
-async function unpublishTrack(req, res) {
+async function unpublishTrack(req, res, next) {
     try {
         const trackId = Number(req.params.id);
         const track = await trackService.editTrack(trackId, { isPublished: false });
         res.json(track);
     } catch (error) {
-        res.status(400).json({ error: error.message });
+        next(error);
     }
 }
 

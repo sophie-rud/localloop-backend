@@ -1,23 +1,23 @@
 import userService from '../services/userService.js';
-import trackService from "../services/trackService.js";
+import trackService from '../services/trackService.js';
 
-async function getAllUsers(req, res) {
+async function getAllUsers(req, res, next) {
     try {
         const users = await userService.getAllUsers();
         res.json(users);
     } catch (error) {
-        res.status(400).json({ error: error.message });
+        next(error);
     }
 }
 
-async function getUserById(req, res) {
+async function getUserById(req, res, next) {
     const id = parseInt(req.params.id)
 
     try {
         const user = await userService.getUserById(id);
         res.json(user);
     } catch (error) {
-        res.status(400).json({ error: error.message });
+        next(error);
     }
 }
 
@@ -38,7 +38,7 @@ function userDataBuilder(body) {
     };
 }
 
-async function createUser(req, res) {
+async function createUser(req, res, next) {
     try {
         const userData = userDataBuilder(req.body);
 
@@ -46,11 +46,11 @@ async function createUser(req, res) {
 
         res.status(201).json(newUser);
     } catch (error) {
-        res.status(400).json({ error: error.message });
+        next(error);
     }
 }
 
-async function editUser(req, res) {
+async function editUser(req, res, next) {
     try {
         const id = parseInt(req.params.id);
         const userData = userDataBuilder(req.body);
@@ -59,31 +59,31 @@ async function editUser(req, res) {
 
         res.status(201).json(updatedUser);
     } catch (error) {
-        res.status(400).json({ error: error.message });
+        next(error);
     }
 }
 
-async function toggleBlockUser(req, res) {
+async function toggleBlockUser(req, res, next) {
     try {
         const updatedUser = await userService.toggleBlockUser(req.params.id);
         res.json(updatedUser);
-    } catch (err) {
-        res.status(400).json({ error: err.message });
+    } catch (error) {
+        next(error);
     }
 }
 
-async function removeUser(req, res) {
+async function removeUser(req, res, next) {
     const id = parseInt(req.params.id)
 
     try {
         await userService.removeUser(id);
         res.status(201).json({ message: "Utilisateur supprimé avec succès" });
     } catch (error) {
-        res.status(400).json({ error: error.message });
+        next(error);
     }
 }
 
-async function getProfile(req, res) {
+async function getProfile(req, res, next) {
     try {
         const email = req.auth.email;
 
@@ -109,11 +109,11 @@ async function getProfile(req, res) {
             }
         })
     } catch (error) {
-        res.status(500).json({ error: error.message });
+        next(error);
     }
 }
 
-async function editProfile(req, res) {
+async function editProfile(req, res, next) {
     try {
         const userId = req.auth.userId;
         const { username, email } = req.body;
@@ -132,11 +132,11 @@ async function editProfile(req, res) {
         res.status(200).json(updatedUser);
     } catch (error) {
         console.error("Erreur lors de la modification du profil :", error);
-        res.status(400).json({ error: error.message });
+        next(error);
     }
 }
 
-async function removeProfile(req, res) {
+async function removeProfile(req, res, next) {
     try {
         const userId = req.auth.userId;
 
@@ -144,7 +144,7 @@ async function removeProfile(req, res) {
 
         res.status(204).send();
     } catch (error) {
-        res.status(500).json({ error: error.message });
+        next(error);
     }
 }
 

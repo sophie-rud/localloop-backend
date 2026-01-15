@@ -1,22 +1,22 @@
 import placeService from '../services/placeService.js';
 
-async function getAllPlaces(req, res) {
+async function getAllPlaces(req, res, next) {
     try {
         const places = await placeService.getAllPlaces();
         res.json(places);
     } catch (error) {
-        res.status(400).json({ error: error.message });
+        next(error);
     }
 }
 
-async function getPlaceById(req, res) {
+async function getPlaceById(req, res, next) {
     const id = parseInt(req.params.id)
 
     try {
         const place = await placeService.getPlaceById(id);
         res.json(place);
     } catch (error) {
-        res.status(400).json({ error: error.message });
+        next(error);
     }
 }
 
@@ -47,7 +47,7 @@ function placeDataBuilder(body, file) {
     return data
 }
 
-async function createPlace(req, res) {
+async function createPlace(req, res, next) {
     try {
         const placeData = placeDataBuilder(req.body, req.file);
 
@@ -55,11 +55,11 @@ async function createPlace(req, res) {
 
         res.status(201).json({ newPlace,  message: "Lieu créé avec succès" });
     } catch (error) {
-        res.status(400).json({ error: error.message });
+        next(error);
     }
 }
 
-async function editPlace(req, res) {
+async function editPlace(req, res, next) {
     try {
         const id = parseInt(req.params.id);
         const updatedPlaceData = placeDataBuilder(req.body, req.file);
@@ -69,18 +69,18 @@ async function editPlace(req, res) {
         res.status(201).json({ updatedPlace, message: "Lieu modifié avec succès" });
     } catch (error) {
         console.error("Erreur lors de la modification du lieu :", error);
-        res.status(400).json({ error: error.message });
+        next(error);
     }
 }
 
-async function removePlace(req, res) {
+async function removePlace(req, res, next) {
     const id = parseInt(req.params.id)
 
     try {
         await placeService.removePlace(id);
         res.status(201).json({ message: "Lieu supprimé avec succès" });
     } catch (error) {
-        res.status(400).json({ error: error.message });
+        next(error);
     }
 }
 

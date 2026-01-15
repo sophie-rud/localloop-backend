@@ -2,7 +2,7 @@ import authService from '../services/authService.js';
 import userService from '../services/userService.js';
 import bcrypt from "bcrypt";
 
-async function signUp (req, res) {
+async function signUp (req, res, next) {
     try {
         const { email, password, username } = req.body;
         const hash = await bcrypt.hash(password, 10);
@@ -11,12 +11,12 @@ async function signUp (req, res) {
 
         res.status(201).json(result);
     } catch (error) {
-        res.status(500).json({ error: error.message || "Erreur interne" });
+        next(error);
     }
 }
 
 //signIn with generation and sending of the JWT in a cookie
-async function signIn(req, res) {
+async function signIn(req, res, next) {
     try {
         const { email, password } = req.body;
         const { accessToken, refreshToken, user } = await authService.signIn(email, password);
@@ -46,7 +46,8 @@ async function signIn(req, res) {
                 }
             });
     } catch (error) {
-        res.status(error.status || 401).json({ error: error.message || "Authentification échouée" });
+        next(error);
+        // res.status(error.status || 401).json({ error: error.message || "Authentification échouée" });
     }
 }
 

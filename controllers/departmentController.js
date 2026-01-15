@@ -1,22 +1,22 @@
 import departmentService from '../services/departmentService.js';
 
-async function getAllDepartments(req, res) {
+async function getAllDepartments(req, res, next) {
     try {
         const departments = await departmentService.getAllDepartments();
         res.json(departments);
     } catch (error) {
-        res.status(400).json({ error: error.message });
+        next(error);
     }
 }
 
-async function getDepartmentById(req, res) {
+async function getDepartmentById(req, res, next) {
     const id = parseInt(req.params.id)
 
     try {
         const department = await departmentService.getDepartmentById(id);
         res.json(department);
     } catch (error) {
-        res.status(400).json({ error: error.message });
+        next(error);
     }
 }
 

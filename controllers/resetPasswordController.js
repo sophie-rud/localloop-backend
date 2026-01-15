@@ -1,6 +1,6 @@
 import passwordService from '../services/resetPasswordService.js';
 
-async function forgotPassword(req, res) {
+async function forgotPassword(req, res, next) {
     try {
         const { email } = req.body;
         await passwordService.requestPasswordReset(email);
@@ -9,12 +9,12 @@ async function forgotPassword(req, res) {
             message: 'Si cet email existe, un lien a été envoyé'
         });
     } catch (error) {
-        console.error('Erreur:', error);
-        res.status(500).json({ message: 'Erreur serveur' });
+        // console.error('Erreur:', error);
+        next(error);
     }
 }
 
-async function verifyResetToken(req, res) {
+async function verifyResetToken(req, res, next) {
     try {
         const user = await passwordService.verifyResetToken(req.params.token);
 
@@ -27,12 +27,12 @@ async function verifyResetToken(req, res) {
             email: user.email
         });
     } catch (error) {
-        console.error('Erreur:', error);
-        res.status(500).json({ message: 'Erreur serveur' });
+        // console.error('Erreur:', error);
+        next(error);
     }
 }
 
-async function resetPassword(req, res) {
+async function resetPassword(req, res, next) {
     try {
         const { password } = req.body;
         const user = await passwordService.resetPassword(req.params.token, password);
@@ -43,8 +43,8 @@ async function resetPassword(req, res) {
 
         res.status(200).json({ message: 'Mot de passe réinitialisé avec succès' });
     } catch (error) {
-        console.error('Erreur:', error);
-        res.status(500).json({ message: 'Erreur serveur' });
+        // console.error('Erreur:', error);
+        next(error);
     }
 }
 

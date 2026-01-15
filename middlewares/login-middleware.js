@@ -15,7 +15,9 @@ async function loginMiddleware(req, res, next) {
         }
 
         const isVerify = await bcrypt.compare(password, user.password);
-        if (!isVerify) return res.status(401).json({ message: "Non autorisé" });
+        if (!isVerify) {
+            return res.status(401).json({message: "Email ou mot de passe incorrect"});
+        }
 
         req.user = user;
         next();

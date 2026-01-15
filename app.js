@@ -12,6 +12,7 @@ import fs from 'fs';
 
 const app = express();
 import apiRouter from './routes/index.js';
+import errorMiddleware from "./middlewares/error-middleware.js";
 
 // Create uploads folder if it doesn't exist
 const uploadsDir = path.join(process.cwd(), 'uploads');
@@ -33,7 +34,7 @@ const limiter = rateLimit({
 });
 
 app.use(helmet({
-    // contentSecurityPolicy: false, // Deactivate if helmet block scripts
+    contentSecurityPolicy: false, // Deactivate if helmet block scripts
     crossOriginEmbedderPolicy: false, // Deactivated because external data are charged from leaflet
 }));
 app.use(hpp());
@@ -47,6 +48,8 @@ app.use('/uploads', express.static(path.join(process.cwd(), 'uploads'), {
         res.set("Cache-Control", "public, max-age=31536000");
     }
 }));
+
+app.use(errorMiddleware);
 
 const PORT = process.env.PORT;
 app.listen(PORT, () => {
