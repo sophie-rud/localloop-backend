@@ -1,3 +1,11 @@
+/**
+ * ⚠️ LEGACY SEED (DO NOT USE)
+ *
+ * This file is kept for documentation purposes.
+ * Replaced by seed-native.cjs due to Prisma client issues.
+ */
+
+
 import { PrismaClient } from "@prisma/client";
 import bcrypt from 'bcrypt';
 
