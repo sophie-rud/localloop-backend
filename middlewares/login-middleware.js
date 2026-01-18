@@ -1,5 +1,5 @@
 import bcrypt from 'bcrypt';
-import userService from '../services/UserService.js';
+import userService from '../services/userService.js';
 
 async function loginMiddleware(req, res, next) {
     try {

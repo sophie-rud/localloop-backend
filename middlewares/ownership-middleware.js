@@ -1,4 +1,4 @@
-import trackService from '../services/TrackService.js';
+import trackService from '../services/trackService.js';
 
 function ownershipMiddleware({ param }) {
     return async (req, res, next) => {
