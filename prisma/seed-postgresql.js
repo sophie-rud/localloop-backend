@@ -1,11 +1,13 @@
-// prisma/seed-native.cjs
+// require('dotenv').config();
+// const { Client } = require('pg');
+// const bcrypt = require('bcrypt');
 
-require('dotenv').config();
-const { Client } = require('pg'); // PostgreSQL driver natif
-const bcrypt = require('bcrypt');
+import "dotenv/config";
+import { Client } from 'pg';
+import bcrypt from 'bcrypt';
 
 const client = new Client({
-    connectionString: process.env.DATABASE_URL, // ton URL DB dans .env
+    connectionString: process.env.DATABASE_URL,
 });
 
 async function main() {
@@ -49,8 +51,8 @@ async function main() {
         const now = new Date();
         await client.query(
             `INSERT INTO "User" (id, username, email, password, avatar, "isActive", "roleId", "createdAt", "updatedAt")
-       VALUES ($1, $2, $3, $4, '/uploads/avatars/default.jpg', $5, $6, $7, $8)`,
-            [u.id, u.username, u.email, hashedPassword, u.isActive, u.roleId, now, now]
+             VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)`,
+            [u.id, u.username, u.email, hashedPassword, '/uploads/avatars/default.jpg', u.isActive, u.roleId, now, now]
         );
     }
 
@@ -98,8 +100,8 @@ async function main() {
         const now = new Date();
         await client.query(
             `INSERT INTO "Place" (id, name, city, description, photo, latitude, longitude, "departmentId", "createdAt", "updatedAt")
-       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)`,
-            [p.id, p.name, p.city, p.description, p.photo, p.latitude, p.longitude, p.departmentId, now, now]
+             VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)`,
+            [p.id, p.name, p.city, p.description, '/uploads/places/default.jpg', p.latitude, p.longitude, p.departmentId, now, now]
         );
     }
     // Tracks
@@ -116,8 +118,8 @@ async function main() {
         const now = new Date();
         await client.query(
             `INSERT INTO "Track" (id, "userId", "themeId", title, photo, duration, distance, difficulty, presentation, "isPublished", "createdAt", "updatedAt")
-       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12)`,
-            [t.id, t.userId, t.themeId, t.title, t.photo, t.duration, t.distance, t.difficulty, t.presentation, t.isPublished, now, now]
+             VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12)`,
+            [t.id, t.userId, t.themeId, t.title, '/uploads/tracks/default.jpg', t.duration, t.distance, t.difficulty, t.presentation, t.isPublished, now, now]
         );
     }
 
@@ -154,8 +156,8 @@ async function main() {
         const now = new Date();
         await client.query(
             `INSERT INTO "Step" (id, "trackId", "placeId", name, photo, advice, anecdote, "stepOrder", "createdAt", "updatedAt")
-       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)`,
-            [s.id, s.trackId, s.placeId, s.name, s.photo, s.advice, s.anecdote, s.stepOrder, now, now]
+             VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)`,
+            [s.id, s.trackId, s.placeId, s.name, '/uploads/steps/default.jpg', s.advice, s.anecdote, s.stepOrder, now, now]
         );
     }
 
@@ -176,12 +178,11 @@ async function main() {
         );
     }
 
-    console.log('Seed terminé avec succès !');
-
     await client.end();
+    console.log('Seed terminé avec succès !');
 }
 
-main().catch((err) => {
+main().catch(err => {
     console.error('Erreur lors du seed :', err);
-    process.exit(1);
+    client.end();
 });
