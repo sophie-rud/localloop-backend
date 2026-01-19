@@ -66,7 +66,7 @@ npx prisma migrate dev
 
 [Optionnel] Lancer le seed :
 ```bash
-node prisma/seed-postgresql.cjs
+node prisma/seed-postgresql.js
 ```
 
 Lancer le serveur :
