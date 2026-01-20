@@ -107,11 +107,14 @@ async function main() {
     // Tracks
     console.log('Création des parcours...');
     const tracks = [
-        { id: 1, userId: 1, themeId: 3, title: 'Balade au cœur de Colmar', photo: '/uploads/tracks/colmar.jpg', duration: 210, distance: 5, difficulty: 'FACILE', presentation: 'Une balade pittoresque à travers les canaux et les maisons à colombages de Colmar.', isPublished: true },
-        { id: 2, userId: 2, themeId: 6, title: 'Strasbourg historique et gourmand', photo: '/uploads/tracks/strasbourg-historique.jpg', duration: 240, distance: 6, difficulty: 'MOYEN', presentation: 'Découvrez l\'histoire et la gastronomie de Strasbourg, entre cathédrale, quartiers médiévaux et marchés.', isPublished: true },
+        { id: 1, userId: 1, themeId: 2, title: 'Balade au cœur de Colmar', photo: '/uploads/tracks/colmar.jpg', duration: 210, distance: 4, difficulty: 'FACILE', presentation: 'Une balade pittoresque à travers les canaux et les maisons à colombages de Colmar.', isPublished: true },
+        { id: 2, userId: 2, themeId: 6, title: 'Strasbourg historique', photo: '/uploads/tracks/strasbourg-historique.jpg', duration: 240, distance: 6, difficulty: 'MOYEN', presentation: 'Découvrez l\'histoire et la gastronomie de Strasbourg, entre cathédrale, quartiers médiévaux et marchés.', isPublished: true },
         { id: 3, userId: 1, themeId: 1, title: 'Sentier des Roches et Forêt de Ribeauvillé', photo: '/uploads/tracks/ribeauville.jpg', duration: 150, distance: 4, difficulty: 'MOYEN', presentation: 'Une balade nature entre roches, forêt dense et points de vue sur le château de Saint-Ulrich.', isPublished: true },
         { id: 4, userId: 2, themeId: 4, title: 'Strasbourg à vélo', photo: '/uploads/tracks/strasbourg-velo.jpg', duration: 120, distance: 10, difficulty: 'SPORTIF', presentation: 'Un parcours à vélo qui longe les quais et les parcs de Strasbourg pour découvrir la ville autrement.', isPublished: true },
         { id: 12, userId: 2, themeId: 1, title: 'Autour du Lac Blanc et Rocher Hans', photo: '/uploads/tracks/lac-blanc.jpg', duration: 210, distance: 6.5, difficulty: 'MOYEN', presentation: 'Une boucle autour du Lac Blanc avec un passage panoramique au Rocher Hans.', isPublished: false },
+        { id: 5, userId: 3, themeId: 1, title: 'Château de Ribeauvillé', photo: '/uploads/tracks/ribeauville1.jpg', duration: 300, distance: 6, difficulty: 'DIFFICILE', presentation: 'Une balade nature entre roches, forêt dense et points de vue sur le château de Saint-Ulrich.', isPublished: true },
+        { id: 6, userId: 3, themeId: 1, title: 'Balade panoramique : belvédère du Coucou', photo: '/uploads/tracks/ribeauville2.jpg', duration: 230, distance: 5, difficulty: 'MOYEN', presentation: 'Une balade nature entre roches, forêt dense et points de vue sur le château de Saint-Ulrich.', isPublished: true },
+        { id: 7, userId: 2, themeId: 2, title: 'Découvrir Strasbourg', photo: '/uploads/tracks/strasbourg.jpg', duration: 310, distance: 7, difficulty: 'MOYEN', presentation: 'Ce parcours propose une immersion au cœur de Strasbourg, ville au carrefour des cultures européenne et alsacienne. À travers ses quartiers emblématiques, son patrimoine architectural et ses lieux de vie, il invite à découvrir l’histoire, l’identité et le dynamisme de la ville. Une invitation à parcourir Strasbourg autrement, entre tradition et modernité.', isPublished: true },
     ];
 
     for (const t of tracks) {
@@ -150,6 +153,23 @@ async function main() {
         // Track 12 - Lac Blanc
         { id: 35, trackId: 12, placeId: 25, name: 'Départ au Barrage du Lac Blanc', photo: '/uploads/steps/barrage.jpg', advice: 'Le matin, la brume est dense, attention à la visibilité.', anecdote: 'Une légende locale dit qu\'un pêcheur solitaire aurait aperçu un \'poisson blanc géant\'.', stepOrder: 1 },
         { id: 36, trackId: 12, placeId: 26, name: 'Passage au Rocher Hans', photo: '/uploads/steps/rocher-hans-step.jpg', advice: 'Vent fort en hauteur, garder les affaires bien sécurisées.', anecdote: 'Un mythe raconte que le Rocher porte le nom d\'un géant alsacien facétieux.', stepOrder: 2 },
+
+        // Track 5 - Château Ribeauvillé
+        { id: 37, trackId: 5, placeId: 23, name: 'Refuge des Trois Tables', photo: '/uploads/steps/trois-tables.jpg', advice: 'Le sol peut être glissant après la pluie, privilégier des bâtons.', anecdote: 'Le refuge doit son nom à trois anciennes tables en pierre présentes au XIXe siècle.', stepOrder: 1 },
+        { id: 38, trackId: 5, placeId: 24, name: 'Belvédère du Rocher du Coucou', photo: '/uploads/steps/rocher-coucou-step.jpg', advice: 'Un passage exposé, rester attentif au vent fort.', anecdote: 'On raconte qu\'un ermite local imitait les oiseaux pour amuser les randonneurs.', stepOrder: 2 },
+        { id: 39, trackId: 5, placeId: 5, name: 'Arrivée au sentier des Roches', photo: '/uploads/steps/depart-roches.jpg', advice: 'Prévoir de bonnes chaussures ! Plusieurs randonnées partent de ce point, vous pouvez compléter votre excursion avec d\'autres parcours.', anecdote: null, stepOrder: 3 },
+
+        // Track 6 - Belvédère Coucou
+        { id: 40, trackId: 6, placeId: 24, name: 'Belvédère du Rocher du Coucou', photo: '/uploads/steps/rocher-coucou-step.jpg', advice: 'Un passage exposé, rester attentif au vent fort.', anecdote: 'On raconte qu\'un ermite local imitait les oiseaux pour amuser les randonneurs.', stepOrder: 1 },
+        { id: 41, trackId: 6, placeId: 5, name: 'Passage vers le sentier des Roches', photo: '/uploads/steps/depart-roches.jpg', advice: 'Prévoir de bonnes chaussures ! Plusieurs randonnées partent de ce point, vous pouvez compléter votre excursion avec d\'autres parcours.', anecdote: null, stepOrder: 2 },
+        { id: 42, trackId: 6, placeId: 23, name: 'Refuge des Trois Tables', photo: '/uploads/steps/trois-tables.jpg', advice: 'Le sol peut être glissant après la pluie, privilégier des bâtons.', anecdote: 'Le refuge doit son nom à trois anciennes tables en pierre présentes au XIXe siècle.', stepOrder: 3 },
+
+        // Track 7 - Découvrir Strasbourg
+        { id: 43, trackId: 7, placeId: 4, name: 'Promenade dans La Petite France', photo: '/uploads/steps/petite-france.jpg', advice: 'Quartier médiéval pittoresque le long des canaux.', anecdote: 'Autrefois quartier des tanneurs, pêcheurs et meuniers.', stepOrder: 1 },
+        { id: 44, trackId: 7, placeId: 3, name: 'Cathédrale de Strasbourg', photo: '/uploads/steps/cathedrale.jpg', advice: 'Admirez la flèche gothique et les vitraux colorés.', anecdote: 'Sa flèche a été la plus haute du monde jusqu\'au XIXe siècle.', stepOrder: 2 },
+        { id: 45, trackId: 7, placeId: 6, name: 'Façade de l’Aubette', photo: '/uploads/steps/aubette.jpg', advice: 'Prenez le temps d’observer les détails architecturaux avant de poursuivre le parcours.', anecdote: 'L’Aubette a accueilli au XXe siècle des artistes d’avant-garde comme Theo van Doesburg.', stepOrder: 3 },
+        { id: 46, trackId: 7, placeId: 21, name: 'Pause sur les quais | Place du Corbeau', photo: '/uploads/steps/place-corbeau-step.jpg', advice: 'Faire attention aux piétons sur les quais, surtout en journée.', anecdote: 'La place tient son nom d\'une ancienne auberge médiévale très réputée. La démolition de quatre maisons, situées au bord de l\'eau, par les bombardements de 1944, a allongé le quai des Bateliers qui se termine désormais place du Corbeau.', stepOrder: 4 },
+        { id: 47, trackId: 7, placeId: 22, name: 'Balade au Parc de l\'Orangerie', photo: '/uploads/steps/orangerie.jpg', advice: 'Idéal pour prendre quelques photos ou remplir vos gourdes.', anecdote: 'Le parc abrite un arbre planté pour commémorer la visite de Napoléon III.', stepOrder: 5 },
     ];
 
     for (const s of steps) {
