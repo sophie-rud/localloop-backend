@@ -116,9 +116,6 @@ La documentation complète de l’API se trouve dans le repository, dans le fich
 
 ## Déploiement
 
-Le projet a été déployé sur un serveur public.
-
-À la date du rendu, la version déployée est en cours de validation en raison d’un problème de configuration serveur (SSL).
-L’application est fonctionnelle en environnement local.
+Le projet est disponible à l'adresse suivante : https://rudsop.cda-alt.ovh/
 
 ---
