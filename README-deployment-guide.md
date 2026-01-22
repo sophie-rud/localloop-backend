@@ -14,6 +14,7 @@ Cette application web utilise :
 
 L'application repose sur une architecture client-serveur où le frontend communique avec le
 backend via des requêtes HTTP, et le backend interroge la base de données PostgreSQL.
+Le frontend et le backend sont répartis dans deux dépôts distincts.
 
 ## Objectif du guide
 
@@ -48,13 +49,16 @@ Le guide suivra le déroulé suivant :
 
 - NodeJs, npm, postgresql, nginx, pm2, git, vim, fail2ban.
 
-La section suivante vous guide dans la mise en place l'environnement sur votre serveur.
+La section suivante vous guide dans la mise en place de l'environnement sur votre serveur.
 
 ---
 
 ## 2. Préparation du serveur
 
 ### 2.1. Mise à jour du serveur
+
+Avant d'intervenir sur le serveur, il est important de s'assurer que tous les packages sont à jour :
+
 ```bash
 sudo apt update
 sudo apt upgrade
@@ -62,7 +66,9 @@ sudo apt upgrade
 
 ### 2.2. Mise en place de l'environnement
 
-#### Installation de NodeJs
+Nous allons maintenant configurer l’environnement nécessaire au déploiement de l’application.
+
+#### a. Installation de NodeJs
 La documentation de NodeJs est disponible ici : [nodejs](https://nodejs.org/fr/download)
 
 Afin de gérer facilement les versions de NodeJs et d’assurer la compatibilité avec l’application, NodeJs est installé via nvm (Node Version Manager).
@@ -89,7 +95,7 @@ node -v # Doit afficher "v22.21.0"
 npm -v # Doit afficher "10.9.4"
 ```
 
-#### Installation de postgresql
+#### b. Installation de PostgreSQL
 La documentation de PostgreSQL est disponible ici : [postgresql](https://www.postgresql.org/download/linux/ubuntu/)
 
 ```bash
@@ -97,7 +103,7 @@ sudo apt install postgresql
 postgresql -V #vérifier l'installation
 ```
 
-#### Installation de NGINX
+#### c. Installation de NGINX
 ```bash
 sudo apt install nginx
 nginx -v #vérifier l'installation
@@ -109,7 +115,7 @@ sudo systemctl start nginx
 sudo systemctl enable nginx
 ```
 
-#### Installation de PM2
+#### d. Installation de PM2
 
 La documentation de PM2 est disponible ici : [PM2](https://pm2.keymetrics.io/docs/usage/quick-start/)
 
@@ -117,18 +123,18 @@ La documentation de PM2 est disponible ici : [PM2](https://pm2.keymetrics.io/doc
 npm install pm2 -g
 ```
 
-#### Installation de Git
+#### e. Installation de Git
 ```bash
 sudo apt install git
 git --version  # Vérifier l'installation
 ```
 
-#### Installation de Vim
+#### f. Installation de Vim
 ```bash
 sudo apt install vim
 ```
 
-#### Installation de fail2ban
+#### g. Installation de fail2ban
 Voir détails dans la section : [Sécurisation de l’environnement](#7-sécurisation-de-lenvironnement)
 ```bash
 sudo apt install fail2ban
@@ -141,7 +147,7 @@ La configuration du pare-feu fait partie des mesures de sécurité recommandées
 Dans le cadre de ce projet, cette étape n’a pas encore été implémentée,
 mais elle est prévue pour une mise en place ultérieure.
 
-Le principe consiste à :
+La configuration consiste à :
 - Autoriser uniquement les ports nécessaires au fonctionnement de l’application,
 - S'assurer que l'accès SSH est correctement configuré avant l'activation, afin d’éviter toute perte d’accès au serveur,
 - Appliquer la configuration et vérifier le statut du pare-feu
@@ -152,7 +158,7 @@ Le principe consiste à :
 
 Se connecter à PostgreSQL
 ```bash
-psql -U postgres
+sudo psql -U postgres
 ```
 
 Une fois connecté dans psql, on peut créer la base de données :
@@ -385,12 +391,12 @@ Pour tester l'API via le proxy NGINX (depuis le serveur) : `curl http://localhos
 PM2 est un gestionnaire de processus qui permet de faire tourner l'application en arrière-plan et de la redémarrer automatiquement en cas de reboot du serveur.
 Il permet de maintenir l'application en ligne 24/7.
 
-Démarrer l'application avec PM2
+Depuis le dossier backend, démarrer l'api avec PM2 :
 ```bash
 pm2 start npm --name "localloop-api" -- run start
 ```
 
-Vérifier le statut
+Vérifier le statut :
 ```bash
 pm2 status
 ```
@@ -495,7 +501,7 @@ sudo certbot certificates
 
 ## 9. Résolution des problèmes courants
 
-Cette section présente les problèmes couramment rencontrés lors du déploiement et leurs solutions.
+Les points suivants présentent les problèmes couramment rencontrés lors du déploiement et leurs solutions.
 
 ### 9.1. Erreur : Le site affiche une ancienne version après déploiement
 Le dossier de build par défaut de Vite est `dist`, tandis que la configuration NGINX pointe vers `build`.
@@ -529,7 +535,7 @@ Dans le dossier backend :
 CLIENT_URL=https://nom-domaine.com
 FRONTEND_URL=https://nom-domaine.com
 ```
-Redémarrer pm2 :
+Redémarrer le processus pm2 :
 ```bash
 pm2 restart localloop-api
 ```
@@ -621,6 +627,7 @@ pm2 restart localloop-api
 
 ### 10.3. Améliorations envisagées
 
+Pour conclure, plusieurs pistes d’amélioration ont été identifiées afin de renforcer la sécurité et la maintenabilité de l’application :
 #### Ajouter des logs backend
 
 Mettre en place des logs applicatifs persistants (requêtes, erreurs) afin de surveiller 
