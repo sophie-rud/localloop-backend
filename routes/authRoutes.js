@@ -17,7 +17,7 @@ const authLimiter = rateLimit({
 router.post(
     "/signup",
     [
-        body("email").isEmail().normalizeEmail(),
+        body("email").isEmail().normalizeEmail({gmail_remove_dots: false}),
         body("username").trim().escape(),
         body("password").isLength({ min: 8 }),
     ],
