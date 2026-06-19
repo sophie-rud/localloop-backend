@@ -52,6 +52,6 @@ app.use('/uploads', express.static(path.join(process.cwd(), 'uploads'), {
 app.use(errorMiddleware);
 
 const PORT = process.env.PORT;
-app.listen(PORT, () => {
+app.listen(PORT, "0.0.0.0",() => {
     console.log(`Server running on http://localhost:${PORT}`);
 })
