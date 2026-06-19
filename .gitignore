@@ -1,5 +1,5 @@
 # Node
-node_modules
+node_modules/
 
 # Keep environment variables out of version control
 .env
@@ -28,4 +28,4 @@ uploads/
 !uploads/.gitkeep
 
 # Docker volumes
-postgres_datas
+postgres_datas/
