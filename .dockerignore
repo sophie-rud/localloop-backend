@@ -15,13 +15,14 @@ Dockerfile
 dist/
 build/
 
-# Prisma
-/generated/prisma
-
 # Uploads
 uploads/
 !uploads/.gitkeep
 
+# Logs
+*.log
+
+# Docs
 README.md
 README-deployment-guide.md
 spec_api.md
